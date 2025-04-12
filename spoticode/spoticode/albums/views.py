@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 # Project
-from spoticode.albums.models import Album, AlbumLink, AlbumTrack
-from spoticode.albums.forms import CreateAlbumForm, EditAlbumForm, EditAlbumLinkForm, CreateAlbumTrackForm, EditAlbumTrackForm
+from spoticode.albums.models import Album, AlbumLink
+from spoticode.albums.forms import CreateAlbumForm, EditAlbumForm, EditAlbumLinkForm
 from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
@@ -42,15 +42,13 @@ def show_all_albums(request):
 @custom_login_required
 @can_read
 def show_details_album(request, id):
-    album = get_object_or_404(Album, album_id=id)
-    album_links = get_object_or_404(AlbumLink, album_id=id)
-    album_tracks = AlbumTrack.objects.filter(album_id=id)
+    album = get_object_or_404(Album, id=id)
+    album_links = get_object_or_404(AlbumLink, id=id)
     
     context = {
         'curr_year': datetime.now().year,
         'album': album,
         'album_links': album_links,
-        'album_tracks': album_tracks,
         'can_create_check': can_create_checker(request.user),
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),
@@ -66,7 +64,7 @@ def create_album(request):
     
     if request.method == 'POST' and form.is_valid():
         album = form.save()
-        return redirect('album_details', id=album.album_id)
+        return redirect('album_details', id=album.id)
 
     context = {
         'curr_year': datetime.now().year,
@@ -79,12 +77,12 @@ def create_album(request):
 @custom_login_required
 @can_create_or_update
 def edit_album_info(request, id):
-    album = get_object_or_404(Album, album_id=id)
+    album = get_object_or_404(Album, id=id)
     form = EditAlbumForm(request.POST or None, instance=album)
     
     if request.method == 'POST' and form.is_valid():
         album = form.save()
-        return redirect('album_details', id=album.album_id)
+        return redirect('album_details', id=album.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -98,8 +96,8 @@ def edit_album_info(request, id):
 @custom_login_required
 @can_create_or_update
 def edit_album_links(request, id):
-    album = get_object_or_404(Album, album_id=id)
-    album_links = get_object_or_404(AlbumLink, album_id=id)
+    album = get_object_or_404(Album, id=id)
+    album_links = get_object_or_404(AlbumLink, id=id)
     form = EditAlbumLinkForm(request.POST or None, instance=album_links)
     
     if request.method == 'POST' and form.is_valid():
@@ -117,7 +115,7 @@ def edit_album_links(request, id):
             album_links.wikipedia_link = None
         
         album_links = form.save()
-        return redirect('album_details', id=album.album_id)
+        return redirect('album_details', id=album.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -132,7 +130,7 @@ def edit_album_links(request, id):
 @custom_login_required
 @can_delete
 def delete_album(request, id):
-    album = get_object_or_404(Album, album_id=id)
+    album = get_object_or_404(Album, id=id)
     
     if request.method == 'POST':
         album.delete()
@@ -144,66 +142,3 @@ def delete_album(request, id):
     }
     
     return render(request, 'albums/album-delete.html', context)
-
-
-
-# Album Tracks
-@custom_login_required
-@can_create_or_update
-def create_album_track(request, id):
-    album = get_object_or_404(Album, album_id=id)
-    form = CreateAlbumTrackForm(request.POST or None, album_id=album.album_id)
-    
-    if request.method == 'POST' and form.is_valid():
-        album_track = form.save(commit=False)
-        album_track.album_id = album
-        album_track.save()
-        return redirect('album_details', id=album.album_id)
-
-    context = {
-        'curr_year': datetime.now().year,
-        'form': form,
-        'album': album,
-    }
-
-    return render(request, 'albums/tracks/album-track-create.html', context)
-
-
-@custom_login_required
-@can_create_or_update
-def edit_album_track(request, id, tr_id):
-    album = get_object_or_404(Album, album_id=id)
-    album_track = get_object_or_404(AlbumTrack, track_id=tr_id)
-    form = EditAlbumTrackForm(request.POST or None, instance=album_track)
-    
-    if request.method == 'POST' and form.is_valid():
-        album_track = form.save()
-        return redirect('album_details', id=album.album_id)
-    
-    context = {
-        'curr_year': datetime.now().year,
-        'album': album,
-        'album_track': album_track,
-        'form': form,
-    }
-    
-    return render(request, 'albums/tracks/album-track-edit.html', context)
-
-
-@custom_login_required
-@can_delete
-def delete_album_track(request, id, tr_id):
-    album = get_object_or_404(Album, album_id=id)
-    album_track = get_object_or_404(AlbumTrack, track_id=tr_id)
-    
-    if request.method == 'POST':
-        album_track.delete()
-        return redirect('album_details', id=album.album_id)
-
-    context = {
-        'curr_year': datetime.now().year,
-        'album': album,
-        'album_track': album_track,
-    }
-    
-    return render(request, 'albums/tracks/album-track-delete.html', context)

@@ -1,4 +1,3 @@
-import random, string
 # Django
 from django.contrib import admin
 # Project
@@ -14,16 +13,8 @@ class PlaylistAdmin(admin.ModelAdmin):
     
     def get_exclude(self, request, obj=None):
         if obj is None:
-            return ['playlist_id',]
+            return ['id',]
         return []
-    
-    def save_model(self, request, obj, form, change):
-        if not obj.playlist_id:            
-            random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-            while Playlist.objects.filter(playlist_id=f'PL-{random_part}').exists():
-                random_part = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-            obj.playlist_id = 'PL-' + random_part
-        super().save_model(request, obj, form, change)
 
 
 @admin.register(SongPlaylistRelation)
@@ -44,11 +35,3 @@ class SongPlaylistRelationAdmin(admin.ModelAdmin):
         if obj is None:
             return ['id',]
         return []
-
-    def save_model(self, request, obj, form, change):
-        if not obj.relation_id:
-            random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
-            while SongPlaylistRelation.objects.filter(relation_id=random_part).exists():
-                random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
-            obj.relation_id = random_part
-        super().save_model(request, obj, form, change)

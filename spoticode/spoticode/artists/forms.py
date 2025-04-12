@@ -6,11 +6,10 @@ from spoticode.artists.models import Artist, ArtistLink
 class CreateArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ('artist_id', 'artist_name', 'other_names')
+        fields = ('artist_name', 'other_names')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['artist_id'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'must be all caps, 2-5 symbols abbreviation'})
         self.fields['artist_name'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['other_names'].widget.attrs.update({'class': 'form-control mb-4'})
 
@@ -18,11 +17,10 @@ class CreateArtistForm(forms.ModelForm):
 class EditArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ('artist_id', 'artist_name', 'other_names')
+        fields = ('artist_name', 'other_names')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['artist_id'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['artist_name'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['other_names'].widget.attrs.update({'class': 'form-control mb-4'})
 

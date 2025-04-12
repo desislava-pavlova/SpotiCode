@@ -21,17 +21,17 @@
                     <li class="list-group-item bg-transparent">Responsible: {{ task.responsible }}</li>
                     <li class="list-group-item bg-transparent">Date Created: {{ task.date_created|date:"F j, Y" }}</li>
                     <li class="list-group-item bg-transparent">Date Closed: {{ task.date_closed|date:"F j, Y" }}</li>
-                    <li class="list-group-item bg-transparent">ID: {{ task.task_id }}</li>
+                    <li class="list-group-item bg-transparent">ID: {{ task.id }}</li>
                     <li class="list-group-item bg-transparent">Last Modified: {{ task.last_modified|date:"F j, Y" }}</li>
                 </ul>
 
                 <div class="bg-secondary rounded p-4">
                     <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
                         {% if can_edit_check %}
-                            <a href="{% url 'task_edit' id=task.task_id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit</a>
+                            <a href="{% url 'task_edit' id=task.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit</a>
                         {% endif %}
                         {% if can_delete_check %}
-                            <a href="{% url 'task_delete' id=task.task_id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
+                            <a href="{% url 'task_delete' id=task.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
                         {% endif %}
                     </div>
                 </div>
@@ -56,10 +56,10 @@
                             <div class="w-100 ms-3">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-0">{{ comment.user.username }}</h6>
-                                    <small>{{ comment.date_added|date:"F j, Y" }}</small>
+                                    <small>{{ comment.date_created|date:"F j, Y" }}</small>
                                 </div>
                                 <span>
-                                    <a href="{% url 'task_comment_details' id=task.task_id c_id=comment.comment_id %}" type="button" class="btn btn-outline-link m-2">{{ comment.comment_text|truncatechars:80 }}</a>
+                                    <a href="{% url 'task_comment_details' id=task.id c_id=comment.id %}" type="button" class="btn btn-outline-link m-2">{{ comment.comment_text|truncatechars:80 }}</a>
                                 </span>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                 <div class="bg-secondary rounded p-4">
                     <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
                         {% if can_create_check %}
-                            <a href="{% url 'task_comment_create' id=task.task_id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-plus me-2"></i>Add Comment</a>
+                            <a href="{% url 'task_comment_create' id=task.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-plus me-2"></i>Add Comment</a>
                         {% endif %}
                     </div>
                 </div>

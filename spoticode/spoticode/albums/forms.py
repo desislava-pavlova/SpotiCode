@@ -1,13 +1,13 @@
 from django import forms
 # Project
-from spoticode.albums.models import Album, AlbumLink, AlbumTrack
+from spoticode.albums.models import Album, AlbumLink
 
 
 # Albums 
 class CreateAlbumForm(forms.ModelForm):
     class Meta:
         model = Album
-        exclude = ('album_id', )
+        exclude = ('id', )
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,7 +20,7 @@ class CreateAlbumForm(forms.ModelForm):
 class EditAlbumForm(forms.ModelForm):
     class Meta:
         model = Album
-        exclude = ('album_id', )
+        exclude = ('id', )
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -59,63 +59,5 @@ class EditAlbumLinkForm(forms.ModelForm):
             self.cleaned_data['wikipedia_link'] = None
         if not rateyourmusic_link:
             self.cleaned_data['rateyourmusic_link'] = None
-
-        return cleaned_data
-
-
-
-# Album Tracks
-class CreateAlbumTrackForm(forms.ModelForm):
-    class Meta:
-        model = AlbumTrack
-        exclude = ('track_id', 'album_id')
-    
-    def __init__(self, *args, **kwargs):
-        album_id = kwargs.pop('album_id', None) 
-        super().__init__(*args, **kwargs)
-        self.album_id = album_id
-        self.fields['track_num'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': '1, 2, ...'})
-        self.fields['track_name'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['feat_artist'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['song_id'].widget.attrs.update({'class': 'form-select mb-4'})
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        album_id = cleaned_data.get('album_id')
-        track_num = cleaned_data.get('track_num')
-        track_name = cleaned_data.get('track_name')
-
-        if AlbumTrack.objects.filter(album_id=album_id, track_num=track_num).exists():
-            raise forms.ValidationError('Track with such number already exists.')
-        elif AlbumTrack.objects.filter(album_id=album_id, track_name=track_name).exists():
-            raise forms.ValidationError('Track with such name already exists.')
-
-        return cleaned_data
-
-
-class EditAlbumTrackForm(forms.ModelForm):
-    class Meta:
-        model = AlbumTrack
-        exclude = ('album_id', 'track_id')
-    
-    def __init__(self, *args, **kwargs):
-        album_id = kwargs.pop('album_id', None) 
-        super().__init__(*args, **kwargs)
-        self.album_id = album_id
-        self.fields['track_num'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': '1'})
-        self.fields['track_name'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['feat_artist'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['song_id'].widget.attrs.update({'class': 'form-select mb-4'})
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        album_id = cleaned_data.get('album_id')
-        track_num = cleaned_data.get('track_num')
-        track_name = cleaned_data.get('track_name')
-
-        if AlbumTrack.objects.filter(album_id=album_id, track_num=track_num).exists():
-            raise forms.ValidationError('Track with such number already exists.')
-        elif AlbumTrack.objects.filter(album_id=album_id, track_name=track_name).exists():
-            raise forms.ValidationError('Track with such name already exists.')
 
         return cleaned_data

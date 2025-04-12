@@ -40,8 +40,8 @@ def show_all_artists(request):
 @custom_login_required
 @can_read
 def show_details_artist(request, id):
-    artist = get_object_or_404(Artist, artist_id=id)
-    artist_links = get_object_or_404(ArtistLink, artist_id=id)
+    artist = get_object_or_404(Artist, id=id)
+    artist_links = get_object_or_404(ArtistLink, id=id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -61,7 +61,7 @@ def create_artist(request):
     
     if request.method == 'POST' and form.is_valid():
         artist = form.save()
-        return redirect('artist_details', id=artist.artist_id)
+        return redirect('artist_details', id=artist.id)
 
     context = {
         'curr_year': datetime.now().year,
@@ -74,12 +74,12 @@ def create_artist(request):
 @custom_login_required
 @can_create_or_update
 def edit_artist_info(request, id):
-    artist = get_object_or_404(Artist, artist_id=id)
+    artist = get_object_or_404(Artist, id=id)
     form = EditArtistForm(request.POST or None, instance=artist)
     
     if request.method == 'POST' and form.is_valid():
         form.save()
-        return redirect('artist_details', id=artist.artist_id)
+        return redirect('artist_details', id=artist.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -93,8 +93,8 @@ def edit_artist_info(request, id):
 @custom_login_required
 @can_create_or_update
 def edit_artist_links(request, id):
-    artist = get_object_or_404(Artist, artist_id=id)
-    artist_links = get_object_or_404(ArtistLink, artist_id=id)
+    artist = get_object_or_404(Artist, id=id)
+    artist_links = get_object_or_404(ArtistLink, id=id)
     form = EditArtistLinkForm(request.POST or None, instance=artist_links)
     
     if request.method == 'POST' and form.is_valid():
@@ -112,7 +112,7 @@ def edit_artist_links(request, id):
             artist_links.wikipedia_link = None
         
         form.save()
-        return redirect('artist_details', id=artist.artist_id)
+        return redirect('artist_details', id=artist.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -127,7 +127,7 @@ def edit_artist_links(request, id):
 @custom_login_required
 @can_delete
 def delete_artist(request, id):
-    artist = get_object_or_404(Artist, artist_id=id)
+    artist = get_object_or_404(Artist, id=id)
     
     if request.method == 'POST':
         artist.delete()

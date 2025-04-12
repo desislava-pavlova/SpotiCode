@@ -6,7 +6,7 @@ from spoticode.artists.admin_filters import ArtistsFirstLetterFilter, ArtistLink
 
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
-    list_display = ('artist_id', 'artist_name', 'other_names', 'songs_count', 'albums_count')
+    list_display = ('id', 'artist_name', 'other_names', 'songs_count', 'albums_count')
     search_fields = ('artist_name', 'other_names')
     list_filter = (
         (ArtistsFirstLetterFilter),
@@ -21,11 +21,11 @@ class ArtistAdmin(admin.ModelAdmin):
 @admin.register(ArtistLink)
 class ArtistLinkAdmin(admin.ModelAdmin):
     list_display = ('artist', 'official_website', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
-    search_fields = ('artist_id__artist_name', 'artist_id__other_names')
+    search_fields = ('id__artist_name', 'id__other_names')
     list_filter = (
         (ArtistLinksFilter),
         (ArtistsFirstLetterFilter), 
     )
     
     def artist(self, obj):
-        return obj.artist_id.artist_name if obj.artist_id else ''
+        return obj.id.artist_name if obj.id else ''

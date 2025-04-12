@@ -7,7 +7,7 @@ from spoticode.tasks.models import Task, TaskComment
 class CreateTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        exclude = ('task_id', 'date_created', 'last_modified', 'date_closed')
+        exclude = ('id', 'date_created', 'last_modified', 'date_closed')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,7 +23,7 @@ class CreateTaskForm(forms.ModelForm):
 class EditTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        exclude = ('task_id', 'date_created', 'last_modified', 'date_closed')
+        exclude = ('id', 'date_created', 'last_modified', 'date_closed')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

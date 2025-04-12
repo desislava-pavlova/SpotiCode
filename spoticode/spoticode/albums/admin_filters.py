@@ -58,20 +58,3 @@ class AlbumLinksFilter(admin.SimpleListFilter):
             return queryset.filter(rateroumusic_link__is_null=False)
         elif self.value() == 'no_rateyourmusic':
             return queryset.filter(rateroumusic_link__is_null=True)
-
-
-class AvailableTracksFilter(admin.SimpleListFilter):
-    title = _('Availability')
-    parameter_name = 'tracks_available'
-
-    def lookups(self, request, model_admin):
-        return (
-            ('yes', _('Yes')),
-            ('no', _('No')),
-        )
-
-    def queryset(self, request, queryset):
-        if self.value() == 'yes':
-            return queryset.filter(song_id__isnull=False)
-        elif self.value() == 'no':
-            return queryset.filter(song_id__isnull=True)

@@ -13,13 +13,13 @@
 
         <h4 class="mb-4 text-center">Are you sure you want to delete {{ music_group }}?</h4>
 
-        <form method="post" action="{% url 'music_group_delete' id=music_group.group_id %}">
+        <form method="post" action="{% url 'music_group_delete' id=music_group.id %}">
 
           <input class="btn btn-primary py-3 w-100 mb-3" type="submit" value="Delete">
             {% csrf_token %}
         </form>
 
-          <a href="{% url 'music_group_details' id=music_group.group_id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
+          <a href="{% url 'music_group_details' id=music_group.id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
       </div>
     </div>
 

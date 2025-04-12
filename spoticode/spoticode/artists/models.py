@@ -1,12 +1,13 @@
+import uuid
+# Django
 from django.db import models
 
 
 class Artist(models.Model):
-    ID_MAX_LENGTH = 5
     COUNTER_DEFAULT = 0
     
-    artist_id = models.CharField(primary_key=True, max_length=ID_MAX_LENGTH, 
-                                 db_column='artist_id', verbose_name='Artist ID')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
+                          db_column='id', verbose_name='ID')
     artist_name = models.CharField(unique=True, 
                                    db_column='artist_name', verbose_name='Artist')
     other_names = models.CharField(null=True, blank=True, 
@@ -27,9 +28,9 @@ class Artist(models.Model):
 
 
 class ArtistLink(models.Model):
-    artist_id = models.OneToOneField(Artist, to_field='artist_id', on_delete=models.CASCADE, 
-                                     primary_key=True, 
-                                     db_column='artist_id', verbose_name='Artist ID')
+    id = models.OneToOneField(Artist, to_field='id', on_delete=models.CASCADE, 
+                              primary_key=True, 
+                              db_column='id', verbose_name='ID')
     official_website = models.URLField(null=True, blank=True, unique=True, 
                                        db_column='official_website', verbose_name='Official Website')
     spotify_link = models.URLField(null=True, blank=True, unique=True, 
@@ -39,8 +40,11 @@ class ArtistLink(models.Model):
     rateyourmusic_link = models.URLField(null=True, blank=True, unique=True, 
                                          db_column='rateyourmusic_link', verbose_name='Rate Your Music Link')
 
+    def __str__(self):
+        return f'Links for artist: {self.id.artist_name}'
+
     class Meta:
         db_table = 'artists_links'
-        ordering = ('artist_id',)
+        ordering = ('id',)
         verbose_name = 'Artist Link'
         verbose_name_plural = 'Artists Links'

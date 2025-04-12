@@ -55,7 +55,7 @@
                             <tr>
                                 <td style="text-align:center" >{{ song }}</td>
                                 <td style="text-align:center" >{{ song.new_artist }}</td>
-                                <td><a href="{% url 'pending_song_details' id=song.pending_id %}" class="details-btn" style="text-align:center">Details</a></td>
+                                <td><a href="{% url 'pending_song_details' id=song.id %}" class="details-btn" style="text-align:center">Details</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

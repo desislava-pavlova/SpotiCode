@@ -15,16 +15,16 @@
                     <li class="list-group-item bg-transparent">Group: {{ pending_song.to_group }}</li>
                     <li class="list-group-item bg-transparent">Added: {{ pending_song.is_added }} </li>
                     <li class="list-group-item bg-transparent">New Artist: {{ pending_song.new_artist }}</li>
-                    <li class="list-group-item bg-transparent">ID: {{ pending_song.pending_id }}</li>
+                    <li class="list-group-item bg-transparent">ID: {{ pending_song.id }}</li>
                 </ul>
 
                 <div class="bg-secondary rounded h-50 p-4">
                     <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
                         {% if can_edit_check%}
-                            <a href="{% url 'pending_song_edit' id=pending_song.pending_id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit</a>
+                            <a href="{% url 'pending_song_edit' id=pending_song.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit</a>
                         {% endif %}
                         {% if can_delete_check%}
-                            <a href="{% url 'pending_song_delete' id=pending_song.pending_id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
+                            <a href="{% url 'pending_song_delete' id=pending_song.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
                         {% endif %}
                     </div>
                 </div>

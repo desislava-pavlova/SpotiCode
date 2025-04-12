@@ -47,7 +47,7 @@ def show_all_songs(request):
 @custom_login_required
 @can_read
 def show_details_song(request, id):
-    song = get_object_or_404(Song, song_id=id)
+    song = get_object_or_404(Song, id=id)
     album_name = song.album_id.album_name if song.album_id else '--single--'
     song_playlists = SongPlaylistRelation.objects.filter(song_id=id)
     playlists = [playlist.playlist_id.playlist_name for playlist in song_playlists] if song_playlists.exists() else '--none--'
@@ -93,16 +93,16 @@ def create_song(request):
 @custom_login_required
 @can_create_or_update
 def add_song_to_playlist(request, id):
-    song = get_object_or_404(Song, song_id=id)
+    song = get_object_or_404(Song, id=id)
     
     if request.method == 'POST':
-        form = AddSongToPlaylistForm(request.POST, song_id=id)
+        form = AddSongToPlaylistForm(request.POST, id=id)
         if form.is_valid():
             playlist = form.cleaned_data['playlist']
             
             SongPlaylistRelation.objects.create(playlist_id=playlist, song_id=song)
             
-            return redirect('song_details', id=song.song_id)
+            return redirect('song_details', id=song.id)
     else:
         form = AddSongToPlaylistForm(song_id=id)
     
@@ -118,7 +118,7 @@ def add_song_to_playlist(request, id):
 @custom_login_required
 @can_create_or_update
 def edit_song(request, id):
-    song = get_object_or_404(Song, song_id=id)
+    song = get_object_or_404(Song, id=id)
     form = EditSongForm(request.POST or None, instance=song)
     
     artist = song.main_artist
@@ -133,7 +133,7 @@ def edit_song(request, id):
             song.spotify_link = spotify_link
         
         form.save()
-        return redirect('song_details', id=song.song_id)
+        return redirect('song_details', id=song.id)
     
     else:
         form = EditSongForm(request.POST or None, instance=song)
@@ -151,7 +151,7 @@ def edit_song(request, id):
 @custom_login_required
 @can_delete
 def delete_song(request, id):
-    song = get_object_or_404(Song, song_id=id)
+    song = get_object_or_404(Song, id=id)
     
     if request.method == 'POST':
         song.delete()
@@ -201,7 +201,7 @@ def show_all_pending_songs(request):
 @custom_login_required
 @can_read
 def show_details_pending_song(request, id):
-    pending_song = get_object_or_404(PendingSong, pending_id=id)
+    pending_song = get_object_or_404(PendingSong, id=id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -220,7 +220,7 @@ def create_pending_song(request):
     
     if request.method == 'POST' and form.is_valid():
         pending_song = form.save()
-        return redirect('pending_song_details', id=pending_song.pending_id)
+        return redirect('pending_song_details', id=pending_song.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -233,12 +233,12 @@ def create_pending_song(request):
 @custom_login_required
 @can_create_or_update
 def edit_pending_song(request, id):
-    pending_song = get_object_or_404(PendingSong, pending_id=id)
+    pending_song = get_object_or_404(PendingSong, id=id)
     form = EditPendingSongForm(request.POST or None, instance=pending_song)
     
     if request.method == 'POST' and form.is_valid():
         form.save()
-        return redirect('pending_song_details', id=pending_song.pending_id)
+        return redirect('pending_song_details', id=pending_song.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -252,7 +252,7 @@ def edit_pending_song(request, id):
 @custom_login_required
 @can_delete
 def delete_pending_song(request, id):
-    pending_song = get_object_or_404(PendingSong, pending_id=id)
+    pending_song = get_object_or_404(PendingSong, id=id)
     
     if request.method == 'POST':
         pending_song.delete()

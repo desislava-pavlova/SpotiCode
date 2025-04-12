@@ -49,7 +49,7 @@
                         {% for album in page_obj %}
                             <tr>
                                 <td style="text-align:center" >{{ album }}</td>
-                                <td><a href="{% url 'album_details' id=album.album_id %}" class="details-btn">Details</a></td>
+                                <td><a href="{% url 'album_details' id=album.id %}" class="details-btn">Details</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

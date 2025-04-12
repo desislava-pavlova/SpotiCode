@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'spoticode.accounts',
     'spoticode.albums',
     'spoticode.artists',
+    'spoticode.auditlog',
     'spoticode.common',
     'spoticode.playlists',
     'spoticode.songs',
@@ -52,6 +53,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # Custom
+    'spoticode.auditlog.middleware.CurrentUserMiddleware',
 ]
 
 ROOT_URLCONF = 'spoticode.urls'

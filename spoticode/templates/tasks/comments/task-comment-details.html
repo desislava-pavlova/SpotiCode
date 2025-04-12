@@ -14,21 +14,21 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item bg-transparent">{{ task_comment.comment_text }}</li>
                     <li class="list-group-item bg-transparent">By User: {{ task_comment.user }} </li>
-                    <li class="list-group-item bg-transparent">Date Added: {{ task_comment.date_added|date:"F j, Y" }} </li>
-                    <li class="list-group-item bg-transparent">ID: {{ task_comment.comment_id }}</li>
+                    <li class="list-group-item bg-transparent">Date Added: {{ task_comment.date_created|date:"F j, Y" }} </li>
+                    <li class="list-group-item bg-transparent">ID: {{ task_comment.id }}</li>
                 </ul>
 
                 <div class="bg-secondary rounded p-4">
                     <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
                         {% if can_edit_check %}
-                            <a href="{% url 'task_comment_edit' id=task.task_id c_id=task_comment.comment_id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit Info</a>
+                            <a href="{% url 'task_comment_edit' id=task.id c_id=task_comment.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit Info</a>
                         {% endif %}
                         {% if can_delete_check %}
-                            <a href="{% url 'task_comment_delete' id=task.task_id c_id=task_comment.comment_id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
+                            <a href="{% url 'task_comment_delete' id=task.id c_id=task_comment.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
                         {% endif %}
                     </div>
 
-                    <a href="{% url 'task_details' id=task.task_id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
+                    <a href="{% url 'task_details' id=task.id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
                 </div>
             </div>
         </div>

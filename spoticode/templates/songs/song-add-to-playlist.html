@@ -12,14 +12,14 @@
                     <h4 class="mb-4 text-center">Add Song to Playlist</h4>
 
                     <div class="form-floating mb-3">
-                        <form action="{% url 'song_add_to_playlist' id=song.song_id %}" method="post">
+                        <form action="{% url 'song_add_to_playlist' id=song.id %}" method="post">
                             {{ form }}
 
                             <button type="submit" class="btn btn-primary py-3 w-100 mb-3">Add</button>
                                 {% csrf_token %}
                         </form>
 
-                        <a href="{% url 'song_details' id=song.song_id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
+                        <a href="{% url 'song_details' id=song.id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
                     </div>
                 </div>
             </div>

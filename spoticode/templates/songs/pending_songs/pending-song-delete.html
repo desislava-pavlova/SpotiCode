@@ -13,13 +13,13 @@
 
         <h4 class="mb-4 text-center">Are you sure you want to delete {{ pending_song }}?</h4>
 
-        <form action="{% url 'pending_song_delete' id=pending_song.pending_id %}" method="post">
+        <form action="{% url 'pending_song_delete' id=pending_song.id %}" method="post">
 
           <input class="btn btn-primary py-3 w-100 mb-3" type="submit" value="Delete">
             {% csrf_token %}
         </form>
 
-        <a href="{% url 'pending_song_details' id=pending_song.pending_id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
+        <a href="{% url 'pending_song_details' id=pending_song.id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
       </div>
     </div>
 

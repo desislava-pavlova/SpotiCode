@@ -49,7 +49,7 @@
                         {% for artist in page_obj %}
                             <tr>
                                 <td style="text-align:center" >{{ artist }}</td>
-                                <td><a href="{% url 'artist_details' id=artist.artist_id %}" class="details-btn">Details</a></td>
+                                <td><a href="{% url 'artist_details' id=artist.id %}" class="details-btn">Details</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

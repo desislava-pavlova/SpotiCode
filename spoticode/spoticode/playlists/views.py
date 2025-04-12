@@ -44,8 +44,8 @@ def show_all_playlists(request):
 @custom_login_required
 @can_read
 def show_details_playlist(request, id):
-    playlist = get_object_or_404(Playlist, playlist_id=id)
-    songs = SongPlaylistRelation.objects.filter(playlist_id=playlist.playlist_id)
+    playlist = get_object_or_404(Playlist, id=id)
+    songs = SongPlaylistRelation.objects.filter(id=playlist.id)
     songs_count = songs.count()
     
     context = {
@@ -72,7 +72,7 @@ def create_playlist(request):
             form.cleaned_data['playlist_link'] = playlist_link
         
         playlist = form.save()
-        return redirect('playlist_details', id=playlist.playlist_id)
+        return redirect('playlist_details', id=playlist.id)
 
     context = {
         'curr_year': datetime.now().year,
@@ -85,7 +85,7 @@ def create_playlist(request):
 @custom_login_required
 @can_create_or_update
 def edit_playlist_info(request, id):
-    playlist = get_object_or_404(Playlist, playlist_id=id)
+    playlist = get_object_or_404(Playlist, id=id)
     
     if request.method == 'POST':
         form = EditPlaylistForm(request.POST, request.FILES, instance=playlist)
@@ -97,7 +97,7 @@ def edit_playlist_info(request, id):
                 playlist.playlist_link = playlist_link
             
             form.save()
-            return redirect('playlist_details', id=playlist.playlist_id)
+            return redirect('playlist_details', id=playlist.id)
     
     else:
         form = EditPlaylistForm(instance=playlist)
@@ -114,7 +114,7 @@ def edit_playlist_info(request, id):
 @custom_login_required
 @can_delete
 def delete_playlist(request, id):
-    playlist = get_object_or_404(Playlist, playlist_id=id)
+    playlist = get_object_or_404(Playlist, id=id)
     
     if request.method == 'POST':
         playlist.delete()
@@ -133,7 +133,7 @@ def delete_playlist(request, id):
 @custom_login_required
 @can_read
 def show_all_playlist_songs(request, id):
-    playlist = get_object_or_404(Playlist, playlist_id=id)
+    playlist = get_object_or_404(Playlist, id=id)
     all_songs = SongPlaylistRelation.objects.filter(playlist_id=id)
     query = request.GET.get('query')
     
@@ -164,7 +164,7 @@ def show_all_playlist_songs(request, id):
 @custom_login_required
 @can_create_or_update
 def select_songs_for_mass_add(request, id):
-    playlist = get_object_or_404(Playlist, playlist_id=id)
+    playlist = get_object_or_404(Playlist, id=id)
     form = SongsSearchForm(request.GET)
     songs = Song.objects.all()
     
@@ -211,7 +211,7 @@ def mass_add_songs(request, id):
                                                     scope="playlist-modify-public"))
         
         selected_songs = request.POST.getlist('songs')
-        playlist = get_object_or_404(Playlist, playlist_id=id)
+        playlist = get_object_or_404(Playlist, id=id)
         spotify_playlist = spotify_log.user_playlist_create(spotify_log.me()["id"], playlist.playlist_name, public=True)
         playlist_id = spotify_playlist["id"]
         playlist.playlist_link = spotify_playlist['external_urls']['spotify']
@@ -232,16 +232,16 @@ def mass_add_songs(request, id):
             
             time.sleep(2)
         
-    return redirect('playlist_songs_all', id=playlist.playlist_id)
+    return redirect('playlist_songs_all', id=playlist.id)
 
 
 @custom_login_required
 @can_delete
 def delete_song_from_playlist(request, id, s_id):
-    playlist = get_object_or_404(Playlist, playlist_id=id)
+    playlist = get_object_or_404(Playlist, id=id)
     song = get_object_or_404(SongPlaylistRelation, playlist_id=id, song_id=s_id)
     
     if request.method == 'POST':
         song.delete()
     
-    return redirect('playlist_songs_all', id=playlist.playlist_id)
+    return redirect('playlist_songs_all', id=playlist.id)

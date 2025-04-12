@@ -13,14 +13,14 @@
                 <h6 class="mb-4 text-center">For: {{ task }}</h6>
 
                 <div class="form-floating mb-3">
-                    <form action="{% url 'task_comment_create' id=task.task_id %}" method="post">
+                    <form action="{% url 'task_comment_create' id=task.id %}" method="post">
                         {% csrf_token %}
                         {{ form }}
 
                         <input class="btn btn-primary py-3 w-100 mb-3" type="submit" value="Add" />
                     </form>
 
-                    <a href="{% url 'task_details' id=task.task_id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-4">Back</a>
+                    <a href="{% url 'task_details' id=task.id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-4">Back</a>
                 </div>
             </div>
         </div>

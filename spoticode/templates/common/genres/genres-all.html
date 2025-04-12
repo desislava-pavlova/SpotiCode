@@ -49,7 +49,7 @@
                             <tr>
                                 <td style="text-align:center" >{{ genre }}</td>
                                 <td style="text-align:center" >{{ genre.songs_count }}</td>
-                                <td><a href="{% url 'genre_details' id=genre.genre_id %}" class="details-btn">Details</a></td>
+                                <td><a href="{% url 'genre_details' id=genre.id %}" class="details-btn">Details</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

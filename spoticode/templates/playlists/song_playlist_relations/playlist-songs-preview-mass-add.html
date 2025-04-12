@@ -14,16 +14,16 @@
 
                 <h5 class="mb-4 text-center">Pick your criterias:</h5>
 
-                <form method="get" action="{% url 'playlist_songs_preview_mass_add' id=playlist.playlist_id %}">
+                <form method="get" action="{% url 'playlist_songs_preview_mass_add' id=playlist.id %}">
                     {% csrf_token %}
                     {{ form }}
 
                     <button class="btn btn-outline-primary w-100 m-2" type="submit">Generate</button>
                 </form>
 
-                <form method="post" action="{% url 'playlist_songs_mass_add' id=playlist.playlist_id %}">
+                <form method="post" action="{% url 'playlist_songs_mass_add' id=playlist.id %}">
                     {% csrf_token %}
-                    <input type="hidden" name="playlist_id" value="{{ playlist.playlist_id }}">
+                    <input type="hidden" name="playlist_id" value="{{ playlist.id }}">
                     <button class="btn btn-primary w-100 m-2" type="submit">Mass Add</button>
                 </form>
 

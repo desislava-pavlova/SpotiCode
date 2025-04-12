@@ -51,7 +51,7 @@
                                 <td style="text-align:center" >{{ group }}</td>
                                 <td style="text-align:center" >{{ group.songs_count }}</td>
                                 <td style="text-align:center" >{{ group.pending_count }}</td>
-                                <td><a href="{% url 'music_group_details' id=group.group_id %}" class="details-btn">Details</a></td>
+                                <td><a href="{% url 'music_group_details' id=group.id %}" class="details-btn">Details</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

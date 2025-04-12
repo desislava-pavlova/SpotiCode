@@ -1,10 +1,10 @@
-import random, string
+import uuid
 from datetime import datetime
 # Django
 from django.db import models
 from django.contrib.auth.models import User
 # Project
-from spoticode.tasks.models_choices import get_app_choices, get_default_user
+from spoticode.web.default_values import get_app_choices, get_deleted_user
 
 
 class Task(models.Model):
@@ -34,8 +34,8 @@ class Task(models.Model):
         'Low': 'Low',
     }
     
-    task_id = models.CharField(primary_key=True, blank=True, 
-                               db_column='task_id', verbose_name='Task ID')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
+                          db_column='id', verbose_name='ID')
     date_created = models.DateTimeField(auto_now_add=True, blank=True, 
                                         db_column='date_created', verbose_name='Date Created')
     last_modified = models.DateTimeField(auto_now=True, blank=True, 
@@ -58,21 +58,14 @@ class Task(models.Model):
     description = models.TextField(db_column='description', verbose_name='Description')
     
     def __str__(self):
-        return self.task_name
+        return f'Task: {self.task_name}'
     
     def save(self, *args, **kwargs):
-        if not self.task_id:
-            random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
-            while Task.objects.filter(task_id=random_part).exists():
-                random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
-            self.task_id = random_part
-            
-            if not self.date_created:
+        if not self.date_created:
                 self.date_created = datetime.now()
-        
         else:
             try:
-                old = Task.objects.get(task_id=self.task_id)
+                old = Task.objects.get(id=self.id)
                 if old.status not in ['Cancelled', 'Completed'] and self.status in ['Cancelled', 'Completed']:
                     self.date_closed = datetime.now()
                 
@@ -80,7 +73,6 @@ class Task(models.Model):
                     self.date_closed = None
             except Task.DoesNotExist:
                 pass
-        
         super().save(*args, **kwargs)
     
     class Meta:
@@ -92,29 +84,24 @@ class Task(models.Model):
 
 
 class TaskComment(models.Model):
-    comment_id = models.CharField(primary_key=True, blank=True, 
-                                  db_column='comment_id', verbose_name='Comment ID')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
+                          db_column='id', verbose_name='ID')
     comment_text = models.TextField(db_column='comment_text', verbose_name='Comment')
-    user = models.ForeignKey(User, to_field='username', on_delete=models.SET(get_default_user), 
+    user = models.ForeignKey(User, to_field='username', on_delete=models.SET(get_deleted_user), 
                              blank=True, 
                              db_column='user', verbose_name='User')
-    date_added = models.DateTimeField(auto_now_add=True, blank=True, 
-                                      db_column='date_added', verbose_name='Date Added')
-    task_id = models.ForeignKey(Task, to_field='task_id', on_delete=models.CASCADE, 
+    date_created = models.DateTimeField(auto_now_add=True, blank=True, 
+                                      db_column='date_created', verbose_name='Date Created')
+    task_id = models.ForeignKey(Task, to_field='id', on_delete=models.CASCADE, 
                                 blank=True, 
                                 db_column='task_id', verbose_name='Task')
-
-    def save(self, *args, **kwargs):
-        if not self.comment_id:
-            random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-            while TaskComment.objects.filter(comment_id=random_part).exists():
-                random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-            self.comment_id = random_part
-        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return 'Task Comment: ' + self.comment_text[:20] if len(self.comment_text) > 20 else self.comment_text
     
     class Meta:
         db_table = 'task_comments'
         unique_together = ('comment_text', 'task_id')
-        ordering = ('task_id', 'date_added')
+        ordering = ('task_id', 'date_created')
         verbose_name = 'Task Comment'
         verbose_name_plural = 'Task Comments'

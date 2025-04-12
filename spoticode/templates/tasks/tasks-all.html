@@ -92,7 +92,7 @@
                                     <td class="text-success" style="text-align:center">{{ task.status }}</td>
                                 {% endif %}
 
-                                <td><a href="{% url 'task_details' id=task.task_id %}" class="details-btn">Details</a></td>
+                                <td><a href="{% url 'task_details' id=task.id %}" class="details-btn">Details</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

@@ -43,8 +43,8 @@ def show_all_tasks(request):
 @custom_login_required
 @can_read
 def show_details_task(request, id):
-    task = get_object_or_404(Task, task_id=id)
-    task_comments = TaskComment.objects.filter(task_id=id).order_by('date_added')
+    task = get_object_or_404(Task, id=id)
+    task_comments = TaskComment.objects.filter(task_id=id).order_by('date_created')
     
     context = {
         'curr_year': datetime.now().year,
@@ -65,7 +65,7 @@ def create_task(request):
     
     if request.method == 'POST' and form.is_valid():
         task = form.save()
-        return redirect('task_details', id=task.task_id)
+        return redirect('task_details', id=task.id)
 
     context = {
         'curr_year': datetime.now().year,
@@ -78,12 +78,12 @@ def create_task(request):
 @custom_login_required
 @can_create_or_update
 def edit_task(request, id):
-    task = get_object_or_404(Task, task_id=id)
+    task = get_object_or_404(Task, id=id)
     form = EditTaskForm(request.POST or None, instance=task)
     
     if request.method == 'POST' and form.is_valid():
         task = form.save()
-        return redirect('task_details', id=task.task_id)
+        return redirect('task_details', id=task.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -97,7 +97,7 @@ def edit_task(request, id):
 @custom_login_required
 @can_delete
 def delete_task(request, id):
-    task = get_object_or_404(Task, task_id=id)
+    task = get_object_or_404(Task, id=id)
     
     if request.method == 'POST':
         task.delete()
@@ -116,8 +116,8 @@ def delete_task(request, id):
 @custom_login_required
 @can_read
 def show_details_task_comment(request, id, c_id):
-    task = get_object_or_404(Task, task_id=id)
-    task_comment = get_object_or_404(TaskComment, comment_id=c_id)
+    task = get_object_or_404(Task, id=id)
+    task_comment = get_object_or_404(TaskComment, id=c_id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -133,15 +133,15 @@ def show_details_task_comment(request, id, c_id):
 @custom_login_required
 @can_create_or_update
 def create_task_comment(request, id):
-    task = get_object_or_404(Task, task_id=id)
-    form = CreateTaskCommentForm(request.POST or None, task_id=task.task_id)
+    task = get_object_or_404(Task, id=id)
+    form = CreateTaskCommentForm(request.POST or None, task_id=task.id)
     
     if request.method == 'POST' and form.is_valid():
         task_comment = form.save(commit=False)
         task_comment.task_id = task
         task_comment.user = request.user
         task_comment.save()
-        return redirect('task_details', id=task.task_id)
+        return redirect('task_details', id=task.id)
 
     context = {
         'curr_year': datetime.now().year,
@@ -155,13 +155,13 @@ def create_task_comment(request, id):
 @custom_login_required
 @can_create_or_update
 def edit_task_comment(request, id, c_id):
-    task = get_object_or_404(Task, task_id=id)
-    task_comment = get_object_or_404(TaskComment, comment_id=c_id)
+    task = get_object_or_404(Task, id=id)
+    task_comment = get_object_or_404(TaskComment, id=c_id)
     form = EditTaskCommentForm(request.POST or None, instance=task_comment)
     
     if request.method == 'POST' and form.is_valid():
         task_comment = form.save()
-        return redirect('task_comment_details', id=task.task_id, c_id=task_comment.comment_id)
+        return redirect('task_comment_details', id=task.id, c_id=task_comment.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -176,12 +176,12 @@ def edit_task_comment(request, id, c_id):
 @custom_login_required
 @can_delete
 def delete_task_comment(request, id, c_id):
-    task = get_object_or_404(Task, task_id=id)
-    task_comment = get_object_or_404(TaskComment, comment_id=c_id)
+    task = get_object_or_404(Task, id=id)
+    task_comment = get_object_or_404(TaskComment, id=c_id)
     
     if request.method == 'POST':
         task_comment.delete()
-        return redirect('task_details', id=task.task_id)
+        return redirect('task_details', id=task.id)
 
     context = {
         'curr_year': datetime.now().year,

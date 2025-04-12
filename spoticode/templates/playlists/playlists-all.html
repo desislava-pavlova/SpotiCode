@@ -49,8 +49,8 @@
                         {% for playlist in page_obj %}
                             <tr>
                                 <td style="text-align:center" >{{ playlist }}</td>
-                                <td><a href="{% url 'playlist_songs_all' id=playlist.playlist_id %}" class="details-btn">Show Songs</a></td>
-                                <td><a href="{% url 'playlist_details' id=playlist.playlist_id %}" class="details-btn">Details</a></td>
+                                <td><a href="{% url 'playlist_songs_all' id=playlist.id %}" class="details-btn">Show Songs</a></td>
+                                <td><a href="{% url 'playlist_details' id=playlist.id %}" class="details-btn">Details</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

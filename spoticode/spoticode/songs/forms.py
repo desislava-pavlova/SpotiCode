@@ -15,9 +15,9 @@ class CreateSongForm(forms.ModelForm):
         self.fields['song_title'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['main_artist'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['feat_artist'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['genre'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['genre_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['song_year'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY'})
-        self.fields['group'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['group_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['album_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['spotify_link'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'https://open.spotify.com/track/...',})
 
@@ -32,9 +32,9 @@ class EditSongForm(forms.ModelForm):
         self.fields['song_title'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['main_artist'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['feat_artist'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['genre'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['genre_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['song_year'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY'})
-        self.fields['group'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['group_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['album_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['spotify_link'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'https://open.spotify.com/track/...',})
 
@@ -43,7 +43,7 @@ class AddSongToPlaylistForm(forms.Form):
     playlist = forms.ModelChoiceField(queryset=Playlist.objects.all(), label='Select Playlist')
     
     def __init__(self, *args, **kwargs):
-        song_id = kwargs.pop('song_id', None)
+        song_id = kwargs.pop('id', None)
         super().__init__(*args, **kwargs)
         self.fields['playlist'].widget.attrs.update({'class': 'form-select mb-4'})
         

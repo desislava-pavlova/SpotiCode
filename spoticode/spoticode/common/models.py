@@ -1,4 +1,4 @@
-import random, string
+import uuid
 # Django
 from django.db import models
 
@@ -7,8 +7,8 @@ class MusicGroup(models.Model):
     GROUP_NAME_MAX_LENGTH = 100
     COUNTER_DEFAULT = 0
     
-    group_id = models.CharField(primary_key=True, blank=True, 
-                                db_column='id', verbose_name='ID')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
+                          db_column='id', verbose_name='ID')
     group_name = models.CharField(max_length=GROUP_NAME_MAX_LENGTH, unique=True, 
                                   db_column='group_name', verbose_name='Group Name')
     songs_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
@@ -19,13 +19,11 @@ class MusicGroup(models.Model):
     def __str__(self):
         return self.group_name
     
-    def save(self, *args, **kwargs):
-        if not self.group_id:
-            random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
-            while MusicGroup.objects.filter(group_id=random_part).exists():
-                random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=4))
-            self.group_id = random_part
-        super().save(*args, **kwargs)
+    @classmethod
+    def get_default_group(cls):
+        group, created = cls.objects.get_or_create(group_name='Unspecified',
+                                                    defaults={'id': uuid.uuid4()})
+        return group.id
 
     class Meta:
         db_table = 'music_groups'
@@ -38,8 +36,8 @@ class Genre(models.Model):
     GENRE_NAME_MAX_LENGTH = 100
     COUNTER_DEFAULT = 0
     
-    genre_id = models.CharField(primary_key=True, blank=True, 
-                                db_column='id', verbose_name='ID')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
+                          db_column='id', verbose_name='ID')
     genre_name = models.CharField(max_length=GENRE_NAME_MAX_LENGTH, unique=True, 
                                   db_column='genre_name', verbose_name='Genre')
     description = models.TextField(null=True, blank=True,
@@ -50,13 +48,10 @@ class Genre(models.Model):
     def __str__(self):
         return self.genre_name
     
-    def save(self, *args, **kwargs):
-        if not self.genre_id:
-            random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
-            while Genre.objects.filter(genre_id=random_part).exists():
-                random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
-            self.genre_id = random_part
-        super().save(*args, **kwargs)
+    @classmethod
+    def get_default_genre(cls):
+        genre, created = cls.objects.get_or_create(genre_name='Unknown')
+        return genre.id
 
     class Meta:
         db_table = 'genres'
