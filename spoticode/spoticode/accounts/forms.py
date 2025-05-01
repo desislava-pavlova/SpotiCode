@@ -1,22 +1,26 @@
 from django import forms
-from django.urls import reverse_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 
 
 class RegisterUserForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('first_name', 'last_name', 'domain_name')
+    
     first_name = forms.CharField(label='First Name')
     last_name = forms.CharField(label='Last Name')
     domain_name = forms.CharField(label='Domain Name')
-    
-    error_messages = {
-        'duplicate_user': _('Such person already exists. Try adding middle name.'),
-        'password_mismatch': _('You may have missed a button or two - passwords don\'t match.'),
-    }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password2'].help_text = 'Password is a combination of all lower domain_name and current year.'
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control mb-3'})
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control mb-3'})
+        self.fields['domain_name'].widget.attrs.update({'class': 'form-control mb-3'})
+        self.fields['password1'].widget.attrs.update({'class': 'form-control mb-3'})
+        self.fields['password1'].help_text = 'Password should be domain + current year.'
+        self.fields['password2'].widget.attrs.update({'class': 'form-control mb-4'})
+        self.fields['password2'].help_text = ''
 
     def clean(self):
         cleaned_data = super().clean()
@@ -28,9 +32,9 @@ class RegisterUserForm(UserCreationForm):
             username = f'{first_name.lower().replace(" ", ".")}.{last_name.lower()}'
   
         if User.objects.filter(username=username).exists():
-            raise forms.ValidationError(self.error_messages['duplicate_user'], code='duplicate_user')
+            raise forms.ValidationError('Such person already exists. Try adding middle name.')
         
-        email = f'{username}@{self.cleaned_data.get("domain_name")}'
+        email = f'{username}@{self.cleaned_data.get("domain_name")}.com'
         
         self.cleaned_data['username'] = username
         self.cleaned_data['email'] = email
@@ -46,12 +50,11 @@ class RegisterUserForm(UserCreationForm):
             user.save()
             return user
 
-    class Meta(UserCreationForm.Meta):
-        model = User
-        fields = ('first_name', 'last_name', 'domain_name')
-
 
 class PasswordChangeForm(PasswordChangeForm):
+    class Meta:
+        model = User
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['old_password'].widget.attrs.update({'class': 'form-control mb-3'})
@@ -63,12 +66,12 @@ class PasswordChangeForm(PasswordChangeForm):
 
 
 class EditUserForm(forms.ModelForm):
-    first_name = forms.CharField(label='First Name')
-    last_name = forms.CharField(label='Last Name')
-
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
+    
+    first_name = forms.CharField(label='First Name')
+    last_name = forms.CharField(label='Last Name')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

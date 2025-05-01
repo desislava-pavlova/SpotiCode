@@ -58,7 +58,11 @@ class Task(models.Model):
     description = models.TextField(db_column='description', verbose_name='Description')
     
     def __str__(self):
-        return f'Task: {self.task_name}'
+        return f'{self.task_name}'
+    
+    @classmethod
+    def field_order(cls):
+        return ['description', 'status', 'task_type', 'priority', 'related_app', 'responsible', 'date_created', 'last_modified', 'date_closed', 'id']
     
     def save(self, *args, **kwargs):
         if not self.date_created:
@@ -98,6 +102,10 @@ class TaskComment(models.Model):
     
     def __str__(self):
         return 'Task Comment: ' + self.comment_text[:20] if len(self.comment_text) > 20 else self.comment_text
+    
+    @classmethod
+    def field_order(cls):
+        return ['comment_text', 'user', 'date_created', 'id']
     
     class Meta:
         db_table = 'task_comments'

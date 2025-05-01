@@ -14,7 +14,7 @@ class CreatePlaylistForm(forms.ModelForm):
         self.fields['playlist_link'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'https://open.spotify.com/playlist/...',})
         self.fields['playlist_image'].widget.attrs.update({'class': 'form-control bg-dark mb-3'})
         self.fields['notes'].widget.attrs.update({'class': 'form-control mb-4'})
-        self.fields['playlist_name'].help_text = ''
+        # self.fields['playlist_name'].help_text = ''
 
 
 class EditPlaylistForm(forms.ModelForm):

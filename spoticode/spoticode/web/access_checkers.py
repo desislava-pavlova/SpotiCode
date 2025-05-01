@@ -1,6 +1,3 @@
-from django.contrib.auth.models import User
-
-
 def can_create_checker(user):
     return user.groups.filter(name__in=['Admin', 'Moderator', 'Editor']).exists()
 

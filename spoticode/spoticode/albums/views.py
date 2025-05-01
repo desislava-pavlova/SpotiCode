@@ -45,10 +45,29 @@ def show_details_album(request, id):
     album = get_object_or_404(Album, id=id)
     album_links = get_object_or_404(AlbumLink, id=id)
     
+    album_fields = []
+    for field_name in album.__class__.field_order():
+        field = album._meta.get_field(field_name)
+        album_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(album, field.name),
+        })
+        
+    links_fields = []
+    for field_name in album_links.__class__.field_order():
+        field = album_links._meta.get_field(field_name)
+        links_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(album_links, field.name),
+        })
+    
     context = {
         'curr_year': datetime.now().year,
         'album': album,
-        'album_links': album_links,
+        'album_fields': album_fields,
+        'links_fields': links_fields,
         'can_create_check': can_create_checker(request.user),
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),

@@ -12,6 +12,8 @@ class Artist(models.Model):
                                    db_column='artist_name', verbose_name='Artist')
     other_names = models.CharField(null=True, blank=True, 
                                    db_column='other_names', verbose_name='Other Names')
+    date_formed = models.DateField(null=True, blank=True,
+                                   db_column='date_formed', verbose_name='Date Formed')
     songs_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
                                       db_column='songs_count', verbose_name='Total Songs')
     albums_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
@@ -19,6 +21,11 @@ class Artist(models.Model):
     
     def __str__(self):
         return self.artist_name
+    
+    @classmethod
+    def field_order(cls):
+        return ['other_names', 'date_formed', 'songs_count', 'albums_count', 'id']
+        
 
     class Meta:
         db_table = 'artists'
@@ -42,6 +49,10 @@ class ArtistLink(models.Model):
 
     def __str__(self):
         return f'Links for artist: {self.id.artist_name}'
+    
+    @classmethod
+    def field_order(cls):
+        return ['official_website', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link']
 
     class Meta:
         db_table = 'artists_links'

@@ -10,12 +10,25 @@
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4">
                 <h4 class="text-center mb-4"> Pending Song Details</h4>
-                <h5 class="text-center mb-4">{{ pending_song }}</h5>
+                <h4 class="text-center mb-4"><u><b>{{ pending_song }}</b></u></h4>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-transparent">Group: {{ pending_song.to_group }}</li>
-                    <li class="list-group-item bg-transparent">Added: {{ pending_song.is_added }} </li>
-                    <li class="list-group-item bg-transparent">New Artist: {{ pending_song.new_artist }}</li>
-                    <li class="list-group-item bg-transparent">ID: {{ pending_song.id }}</li>
+                    {% for field in pending_fields %}
+                        {% if field.value or field.value == False %}
+                            {% if field.type == "DateField" %}
+                                <li class="list-group-item bg-transparent">{{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}</li>
+                            {% elif field.type == "URLField" %}
+                                <a href="{{ field.value }}" target="_blank" rel="noopener noreferrer" class="list-group-item bg-transparent">{{ field.verbose_name }}: Yes</a>
+                            {% else %}
+                                <li class="list-group-item bg-transparent">{{ field.verbose_name }}: {{ field.value}}</li>
+                            {% endif %}
+                        {% else %}
+                            {% if field.type == "URLField" %}
+                            <li class="list-group-item bg-transparent">{{ field.verbose_name }}: No</li>
+                            {% else %}
+                                <li class="list-group-item bg-transparent">{{ field.verbose_name }}:</li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
                 </ul>
 
                 <div class="bg-secondary rounded h-50 p-4">

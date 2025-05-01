@@ -7,27 +7,29 @@ from spoticode.albums.models import Album, AlbumLink
 class CreateAlbumForm(forms.ModelForm):
     class Meta:
         model = Album
-        exclude = ('id', )
+        exclude = ('id', 'songs_count')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['release_date'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY-MM-DD'})
         self.fields['album_artist'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['album_name'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['album_type'].widget.attrs.update({'class': 'form-select mb-4'})
+        self.fields['album_type'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['songs_album'].widget.attrs.update({'class': 'form-select mb-4'})
 
 
 class EditAlbumForm(forms.ModelForm):
     class Meta:
         model = Album
-        exclude = ('id', )
+        exclude = ('id', 'songs_count')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['release_date'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY-MM-DD'})
         self.fields['album_artist'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['album_name'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['album_type'].widget.attrs.update({'class': 'form-select mb-4'})
+        self.fields['album_type'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['songs_album'].widget.attrs.update({'class': 'form-select mb-4'})
 
 
 class EditAlbumLinkForm(forms.ModelForm):

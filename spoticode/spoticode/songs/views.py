@@ -48,18 +48,34 @@ def show_all_songs(request):
 @can_read
 def show_details_song(request, id):
     song = get_object_or_404(Song, id=id)
-    album_name = song.album_id.album_name if song.album_id else '--single--'
     song_playlists = SongPlaylistRelation.objects.filter(song_id=id)
-    playlists = [playlist.playlist_id.playlist_name for playlist in song_playlists] if song_playlists.exists() else '--none--'
+    playlists = [playlist.playlist_id.playlist_name for playlist in song_playlists] if song_playlists.exists() else None
     
-    if playlists != '--none--':
+    if playlists:
         playlists = ', '.join(playlists)
+        
+    song_fields = []
+    for field_name in song.__class__.field_order():
+        field = song._meta.get_field(field_name)
+        song_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(song, field.name),
+        })
+    
+    song_fields.append({
+        'verbose_name': 'In Playlists',
+        'type': None,
+        'value': playlists if playlists else '--none--'
+    })
+    
+    if song_fields[2].get('verbose_name') == 'Album' and song_fields[2].get('value') == None:
+        song_fields[2].update({'value': '--single--'})
     
     context = {
         'curr_year': datetime.now().year,
         'song': song,
-        'album_name': album_name,
-        'playlists': playlists,
+        'song_fields': song_fields,
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),
     }
@@ -80,7 +96,7 @@ def create_song(request):
             form.cleaned_data['spotify_link'] = spotify_link
         
         song = form.save()
-        return redirect('song_details', id=song.song_id)
+        return redirect('song_details', id=song.id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -104,7 +120,7 @@ def add_song_to_playlist(request, id):
             
             return redirect('song_details', id=song.id)
     else:
-        form = AddSongToPlaylistForm(song_id=id)
+        form = AddSongToPlaylistForm(id=id)
     
     context = {
         'curr_year': datetime.now().year,
@@ -203,9 +219,19 @@ def show_all_pending_songs(request):
 def show_details_pending_song(request, id):
     pending_song = get_object_or_404(PendingSong, id=id)
     
+    pending_fields = []
+    for field_name in pending_song.__class__.field_order():
+        field = pending_song._meta.get_field(field_name)
+        pending_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(pending_song, field.name),
+        })
+    
     context = {
         'curr_year': datetime.now().year,
         'pending_song': pending_song,
+        'pending_fields': pending_fields,
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),
     }

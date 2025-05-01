@@ -10,36 +10,29 @@
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4">
                 <h4 class="text-center mb-4">Artist Details</h4>
-                <h5 class="text-center mb-4">{{ artist }}</h5>
+                <h4 class="text-center mb-4"><u><b>{{ artist }}</b></u></h4>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-transparent">Other Names: {{ artist.other_names }}</li>
-                    <li class="list-group-item bg-transparent">Total Songs: {{ artist.songs_count }} </li>
-                    <li class="list-group-item bg-transparent">Total Albums: {{ artist.albums_count }}</li>
-                    <li class="list-group-item bg-transparent">ID: {{ artist.id }}</li>
+                    {% for field in artist_fields %}
+                        <li class="list-group-item bg-transparent">
+                            {% if field.value %}
+                                {% if field.type == "DateField" %}
+                                    {{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}
+                                {% else %}
+                                    {{ field.verbose_name }}: {{ field.value}}
+                                {% endif %}
+                            {% else %}
+                                {{ field.verbose_name }}:
+                            {% endif %}
+                        </li>
+                    {% endfor %}
 
-                    {% if artist_links.official_website %}
-                        <a href="{{ artist_links.official_website }}" class="list-group-item bg-transparent">Official Website: Yes</a>
-                    {% else %}
-                        <li class="list-group-item bg-transparent">Official Website: No</li>
-                    {% endif %}
-
-                    {% if artist_links.spotify_link %}
-                        <a href="{{ artist_links.spotify_link }}" class="list-group-item bg-transparent">Spotify Link: Yes</a>
-                    {% else %}
-                        <li class="list-group-item bg-transparent">Spotify Link: No</li>
-                    {% endif %}
-
-                    {% if artist_links.wikipedia_link %}
-                        <a href="{{ artist_links.wikipedia_link }}" class="list-group-item bg-transparent">Wikipedia Link: Yes</a>
-                    {% else %}
-                        <li class="list-group-item bg-transparent">Wikipedia Link: No</li>
-                    {% endif %}
-
-                    {% if artist_links.rateyourmusic_link %}
-                        <a href="{{ artist_links.rateyourmusic_link }}" class="list-group-item bg-transparent">RateYourMusic Link: Yes</a>
-                    {% else %}
-                        <li class="list-group-item bg-transparent">RateYourMusic Link: No</li>
-                    {% endif %}
+                    {% for field in links_fields %}
+                        {% if field.value %}
+                            <a href="{{ field.value }}" target="_blank" rel="noopener noreferrer" class="list-group-item bg-transparent">{{ field.verbose_name }}: Yes</a>
+                        {% else %}
+                            <li class="list-group-item bg-transparent">{{ field.verbose_name }}: No</li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
 
                 <div class="bg-secondary rounded h-20 p-4">

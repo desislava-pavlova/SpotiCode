@@ -24,6 +24,10 @@ class MusicGroup(models.Model):
         group, created = cls.objects.get_or_create(group_name='Unspecified',
                                                     defaults={'id': uuid.uuid4()})
         return group.id
+    
+    @classmethod
+    def field_order(cls):
+        return ['songs_count', 'pending_count', 'id']
 
     class Meta:
         db_table = 'music_groups'
@@ -52,6 +56,10 @@ class Genre(models.Model):
     def get_default_genre(cls):
         genre, created = cls.objects.get_or_create(genre_name='Unknown')
         return genre.id
+    
+    @classmethod
+    def field_order(cls):
+        return ['description', 'songs_count', 'id']
 
     class Meta:
         db_table = 'genres'

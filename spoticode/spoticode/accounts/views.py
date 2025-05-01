@@ -1,25 +1,22 @@
 from datetime import datetime
 # Django
-from django.shortcuts import render, redirect
-from django.urls import reverse, reverse_lazy
-from django.shortcuts import get_object_or_404
-from django.contrib.auth import logout, login, authenticate
+from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import logout, login, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User, Group
-from django.views.generic import CreateView, UpdateView, DetailView
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 # Project
 from spoticode.accounts.forms import RegisterUserForm, EditUserForm, PasswordChangeForm
-from spoticode.accounts.mixins import LoginRequiredMixin, AdminRequiredMixin, UserCheckMixin
+from spoticode.web.access_validators import custom_login_required, is_staff, is_user_self
 
 
-class CustomLoginView(LoginView):
-    template_name = 'accounts/login.html'
+def log_in(request):
+    error_message = ""
     
-    def post(self, request, *args, **kwargs):
-        username = request.POST['username']
-        password = request.POST['password']
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        
+
         if user is not None:
             if user.last_login is None:
                 login(request, user)
@@ -29,106 +26,110 @@ class CustomLoginView(LoginView):
                 return redirect('homepage')
         else:
             error_message = 'Your username or password is incorrect.'
-            return redirect(f"{reverse('user_login')}?error={error_message}")
     
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['curr_year'] = datetime.now().year
-        context['error_message'] = self.request.GET.get('error', None)
-        return context
+    context = {
+        'curr_year': datetime.now().year,
+        'error_message': error_message,
+    }
+    
+    return render(request, 'accounts/login.html', context)
 
 
-class CustomLogoutView(LoginRequiredMixin, LogoutView):
-    def get(self, request, *args, **kwargs):
-        logout(request)
-        return redirect(reverse('homepage'))
+@custom_login_required
+def log_out(request):
+    logout(request)
+    return redirect(reverse('homepage'))
 
 
-class RegisterUserView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
-    template_name = 'accounts/register.html'
-    form_class = RegisterUserForm
-    success_url = reverse_lazy('homepage') 
+@custom_login_required
+@is_staff
+def register_user(request):
+    form = RegisterUserForm(request.POST or None)
     
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['curr_year'] = datetime.now().year
-        return context
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.save()
+            user.save()
+            return redirect('homepage')
     
-    def form_valid(self, form):
-        user = form.save()
-        user.save()
-        return super().form_valid(form)
+    context = {
+        'curr_year': datetime.now().year,
+        'form': form,
+    }
+
+    return render(request, 'accounts/register.html', context)
 
 
-class FirstLoginUserView(LoginRequiredMixin, UserCheckMixin, PasswordChangeView):
-    template_name = 'accounts/first-login-user.html'
-    form_class = PasswordChangeForm
+@custom_login_required
+@is_user_self
+def first_login_user(request, id):
+    user = get_object_or_404(User, id=id)
+    form = PasswordChangeForm(user, request.POST or None)
     
-    def get_object(self, queryset=None):
-        return get_object_or_404(User, id=self.kwargs['id'])
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            viewer_group, created = Group.objects.get_or_create(name='Viewer')
+            user.groups.add(viewer_group)
+            return redirect('homepage')
     
-    def get_success_url(self):
-        return reverse_lazy('homepage')
-    
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        user = self.get_object()
-        viewer_group, created = Group.objects.get_or_create(name='Viewer')
-        user.groups.add(viewer_group)
+    context = {
+        'curr_year': datetime.now().year,
+        'form': form,
+    }
 
-        return response
-    
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['curr_year'] = datetime.now().year
-        return context
+    return render(request, 'accounts/first-login-user.html', context)
 
 
-class ShowDetailsUserView(LoginRequiredMixin, UserCheckMixin, DetailView):
-    model = User
-    template_name = 'accounts/details-user.html'
+@custom_login_required
+@is_user_self
+def show_details_user(request, id):
+    user = get_object_or_404(User, id=id)
+    user_group = user.groups.first()
     
-    def get_object(self, queryset=None):
-        return get_object_or_404(User, id=self.kwargs['id'])
+    context = {
+        'curr_year': datetime.now().year,
+        'user': user,
+        'user_group': user_group,
+    }
     
-    def get_user_group(self):
-        user = self.get_object()
-        return user.groups.first() if user.groups.exists() else None
-    
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['curr_year'] = datetime.now().year
-        context['user_group'] = self.get_user_group()
-        return context
+    return render(request, 'accounts/details-user.html', context)
 
 
-class EditUserView(LoginRequiredMixin, UserCheckMixin, UpdateView):
-    template_name = 'accounts/edit-user.html'
-    form_class = EditUserForm
+@custom_login_required
+@is_user_self
+def edit_user_info(request, id):
+    user = get_object_or_404(User, id=id)
+    form = EditUserForm(request.POST or None, instance=user)
     
-    def get_object(self, queryset=None):
-        return get_object_or_404(User, id=self.kwargs['id'])
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('user_details', id=user.id)
     
-    def get_success_url(self):
-        return reverse('user_details', kwargs={'id': self.kwargs['id']})
+    context = {
+        'curr_year': datetime.now().year,
+        'user': user,
+        'form': form,
+    }
     
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['curr_year'] = datetime.now().year
-        return context
+    return render(request, 'accounts/edit-user.html', context)
 
 
-class CustomPasswordChangeView(LoginRequiredMixin, UserCheckMixin, PasswordChangeView):
-    template_name = 'accounts/password-change-user.html'
-    form_class = PasswordChangeForm
+@custom_login_required
+@is_user_self
+def edit_user_password(request, id):
+    user = get_object_or_404(User, id=id)
+    form = PasswordChangeForm(user, request.POST or None)
     
-    def get_object(self, queryset=None):
-        return get_object_or_404(User, id=self.kwargs['id'])
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect('user_details', id=user.id)
     
-    def get_success_url(self):
-        return reverse_lazy('user_details', kwargs={'id': self.kwargs['id']})
-    
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['curr_year'] = datetime.now().year
-        return context
+    context = {
+        'curr_year': datetime.now().year,
+        'form': form,
+    }
+
+    return render(request, 'accounts/password-change-user.html', context)

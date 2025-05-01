@@ -43,10 +43,29 @@ def show_details_artist(request, id):
     artist = get_object_or_404(Artist, id=id)
     artist_links = get_object_or_404(ArtistLink, id=id)
     
+    artist_fields = []
+    for field_name in artist.__class__.field_order():
+        field = artist._meta.get_field(field_name)
+        artist_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(artist, field.name),
+        })
+        
+    links_fields = []
+    for field_name in artist_links.__class__.field_order():
+        field = artist_links._meta.get_field(field_name)
+        links_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(artist_links, field.name),
+        })
+    
     context = {
         'curr_year': datetime.now().year,
         'artist': artist,
-        'artist_links': artist_links,
+        'artist_fields': artist_fields,
+        'links_fields': links_fields,
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),
     }

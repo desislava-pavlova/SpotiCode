@@ -15,14 +15,18 @@ class Playlist(models.Model):
     spotify_count = models.PositiveIntegerField(blank=True, default=COUNTER_DEFAULT, 
                                                 db_column='spotify_count', verbose_name='Total Songs on Spotify')
     playlist_link = models.URLField(null=True, blank=True, unique=True, 
-                                    db_column='playlist_link', verbose_name='Playlist Link')
+                                    db_column='playlist_link', verbose_name='Spotify Link')
     playlist_image = models.ImageField(null=True, blank=True, 
                                        db_column='playlist_image', verbose_name='Image')
     notes = models.TextField(null=True, blank=True, 
                              db_column='notes', verbose_name='Notes')
     
     def __str__(self):
-        return f'Playlist: "{self.playlist_name}"'
+        return f'{self.playlist_name}'
+    
+    @classmethod
+    def field_order(cls):
+        return ['songs_count', 'spotify_count', 'notes', 'id', 'playlist_link']
     
     class Meta:
         db_table = 'playlists'

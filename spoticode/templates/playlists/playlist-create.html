@@ -14,7 +14,23 @@
                 <div class="form-floating mb-3">
                     <form action="{% url 'playlist_create' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{ form }}
+
+                        {% if form.is_bound %}
+                            {{ form.non_field_errors }}
+                            {% for field in form %}
+                                {{ field.label_tag }}
+                                {% for error in field.errors %}
+                                    <div class="error">{{ error }}</div>
+                                {% endfor %}
+                                {{ field }}
+                            {% endfor %}
+                        {% else %}
+                            {% for field in form %}
+                                {{ field.label_tag }}
+                                {{ field }}
+                            {% endfor %}
+                        {% endif %}
+
 
                         <input class="btn btn-primary py-3 w-100 mb-4" type="submit" value="Add" />
                     </form>

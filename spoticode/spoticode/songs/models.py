@@ -40,6 +40,10 @@ class Song(models.Model):
         else:
             return f'{self.main_artist.artist_name} - {self.song_title}'
     
+    @classmethod
+    def field_order(cls):
+        return ['song_year', 'genre_id', 'album_id', 'group_id', 'id', 'spotify_link']
+    
     class Meta:
         db_table = 'songs'
         unique_together = (('song_title', 'main_artist'),)
@@ -68,6 +72,10 @@ class PendingSong(models.Model):
             return f'{self.main_artist} - {self.song_title} (feat. {self.feat_artist})'
         else:
             return f'{self.main_artist} - {self.song_title}'
+    
+    @classmethod
+    def field_order(cls):
+        return ['to_group', 'is_added', 'new_artist', 'id']
     
     class Meta:
         db_table = 'pending_songs'

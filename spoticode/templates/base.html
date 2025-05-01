@@ -93,21 +93,22 @@
                     {% if user.is_staff %}
                         <a href="{% url 'user_register' %}" class="nav-item nav-link"><i class="fa fa-solid fa-user-plus me-2"></i>Register User</a>
                     {% endif %}
- 
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fa fa-user me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Profile</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'user_details' id=user.id %}" class="dropdown-item">My Profile</a>
-                                <a href="{% url 'user_logout' %}" class="dropdown-item">Log Out</a>
-                            {% else %}
-                                <a href="{% url 'user_login' %}" class="dropdown-item">Login</a>
-                            {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fa fa-user me-lg-2"></i>
+                                <span class="d-none d-lg-inline-flex">Profile</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                                    <a href="{% url 'user_details' id=user.id %}" class="dropdown-item">My Profile</a>
+                                    <a href="{% url 'user_logout' %}" class="dropdown-item">Log Out</a>
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <a href="{% url 'user_login' %}" class="nav-item nav-link"><i class="fa fa-user me-lg-2"></i>Login</a>
+                    {% endif %}
+
                     <a href="{% url 'about_page' %}" class="nav-item nav-link"><i class="fa fa-solid fa-info me-2"></i>About</a>
                     
                 </div>

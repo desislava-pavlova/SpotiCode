@@ -41,10 +41,20 @@ def show_all_music_groups(request):
 @can_read
 def show_details_music_group(request, id):
     music_group = get_object_or_404(MusicGroup, id=id)
+    
+    music_group_fields = []
+    for field_name in music_group.__class__.field_order():
+        field = music_group._meta.get_field(field_name)
+        music_group_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(music_group, field.name),
+        })
 
     context = {
         'curr_year': datetime.now().year,
         'music_group': music_group,
+        'music_group_fields': music_group_fields,
         'can_edit_check': can_edit_checker(request.user),
         'is_staff_check': request.user.is_staff,
     }
@@ -138,9 +148,19 @@ def show_all_genres(request):
 def show_details_genre(request, id):
     genre = get_object_or_404(Genre, id=id)
     
+    genre_fields = []
+    for field_name in genre.__class__.field_order():
+        field = genre._meta.get_field(field_name)
+        genre_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(genre, field.name),
+        })
+    
     context = {
         'curr_year': datetime.now().year,
         'genre': genre,
+        'genre_fields': genre_fields,
         'can_edit_check': can_edit_checker(request.user),
         'is_staff_check': request.user.is_staff,
     }

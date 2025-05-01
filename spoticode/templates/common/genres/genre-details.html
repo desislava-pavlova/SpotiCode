@@ -10,17 +10,22 @@
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4">
                 <h4 class="text-center mb-4">Genre Details</h4>
-                <h5 class="text-center mb-4">{{ genre }}</h5>
+                <h4 class="text-center mb-4"><u><b>{{ genre }}</b></u></h4>
 
                 <ul class="list-group list-group-flush">
-                    {% if genre.description %}
-                        <li class="list-group-item bg-transparent">{{ genre.description }}</li>
-                    {% else %}
-                        <li class="list-group-item bg-transparent">No Description</li>
-                    {% endif %}
-
-                    <li class="list-group-item bg-transparent">Total Songs: {{ genre.songs_count }}</li>
-                    <li class="list-group-item bg-transparent">ID: {{ genre.id }}</li>
+                    {% for field in genre_fields %}
+                        <li class="list-group-item bg-transparent">
+                            {% if field.value %}
+                                {% if field.type == "DateField" %}
+                                    {{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}
+                                {% else %}
+                                    {{ field.verbose_name }}: {{ field.value}}
+                                {% endif %}
+                            {% else %}
+                                {{ field.verbose_name }}:
+                            {% endif %}
+                        </li>
+                    {% endfor %}
                 </ul>
 
                 <div class="bg-secondary rounded h-50 p-4">

@@ -15,7 +15,7 @@ class AuditLog(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
                           db_column='id', verbose_name='ID')
-    object_id = models.CharField(max_length=100, 
+    object_id = models.CharField(max_length=100,
                                  db_column='object_id', verbose_name='Object ID')
     table_name = models.CharField(max_length=100, 
                                   db_column='table_name', verbose_name='Table Name')

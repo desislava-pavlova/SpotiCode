@@ -53,11 +53,10 @@ class CreateTaskCommentForm(forms.ModelForm):
 class EditTaskCommentForm(forms.ModelForm):
     class Meta:
         model = TaskComment
-        fields = ('comment_text', 'user')
+        fields = ('comment_text',)
     
     def __init__(self, *args, **kwargs):
         task_id = kwargs.pop('task_id', None) 
         super().__init__(*args, **kwargs)
         self.task_id = task_id
-        self.fields['comment_text'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['user'].widget.attrs.update({'class': 'form-select mb-4'})
+        self.fields['comment_text'].widget.attrs.update({'class': 'form-control mb-4'})

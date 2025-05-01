@@ -48,10 +48,22 @@ def show_details_playlist(request, id):
     songs = SongPlaylistRelation.objects.filter(id=playlist.id)
     songs_count = songs.count()
     
+    playlist_fields = []
+    for field_name in playlist.__class__.field_order():
+        field = playlist._meta.get_field(field_name)
+        playlist_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(playlist, field.name),
+        })
+    
+    print(playlist_fields)
+    
     context = {
         'curr_year': datetime.now().year,
         'playlist': playlist,
         'songs_count': songs_count,
+        'playlist_fields': playlist_fields,
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),
     }
@@ -63,7 +75,7 @@ def show_details_playlist(request, id):
 @can_create_or_update
 def create_playlist(request):
     form = CreatePlaylistForm(request.POST or None, request.FILES)
-    
+      
     if request.method == 'POST' and form.is_valid():
         
         playlist_link = form.cleaned_data['playlist_link']

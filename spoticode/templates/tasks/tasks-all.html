@@ -63,7 +63,7 @@
                                 {% elif task.priority == 'Normal' %}
                                     <td class="text-white" style="text-align:center">{{ task.priority }}</td>
                                 {% elif task.priority == 'Low' %}
-                                    <td class="text-dark" style="text-align:center">{{ task.priority }}</td>
+                                    <td class="text-muted" style="text-align:center">{{ task.priority }}</td>
                                 {% endif %}
 
                                 <td style="text-align:center">{{ task.related_app }}</td>
@@ -83,11 +83,11 @@
                                 {% elif task.status == 'Issues Found' %}
                                     <td class="text-danger" style="text-align:center">{{ task.status }}</td>
                                 {% elif task.status == 'On Hold' %}
-                                    <td class="text-muted" style="text-align:center">{{ task.status }}</td>
+                                    <td class="text-white-50" style="text-align:center">{{ task.status }}</td>
                                 {% elif task.status == 'For Testing' %}
                                     <td class="text-white" style="text-align:center">{{ task.status }}</td>
                                 {% elif task.status == 'Cancelled' %}
-                                    <td class="text-dark" style="text-align:center">{{ task.status }}</td>
+                                    <td class="text-muted" style="text-align:center">{{ task.status }}</td>
                                 {% elif task.status == 'Completed' %}
                                     <td class="text-success" style="text-align:center">{{ task.status }}</td>
                                 {% endif %}
