@@ -161,6 +161,7 @@ cython_debug/
 /media/
 /migrations/
 caller.py
+ignore_*.py
 
 # Other ignores
 /darkpan-1.0.0/
