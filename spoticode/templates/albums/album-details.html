@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SpotiCode | Albums - {{ album }}{% endblock %}
+{% block title %}{{ album }} | SpotiCode{% endblock %}
 
 {% block main_content %}
 
@@ -15,7 +15,7 @@
                 <ul class="list-group list-group-flush">
                     {% for field in album_fields %}
                         <li class="list-group-item bg-transparent">
-                            {% if field.value %}
+                            {% if field.value or field.value == 0 %}
                                 {% if field.type == "DateField" %}
                                     {{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}
                                 {% else %}
@@ -45,6 +45,10 @@
                         {% if can_delete_check %}
                             <a href="{% url 'album_delete' id=album.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
                         {% endif %}
+                    </div>
+
+                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
+                        <a href="{% url 'albums_all'%}" type="button" class="btn btn-outline-light m-2">Back</a>
                     </div>
                 </div>
             </div>

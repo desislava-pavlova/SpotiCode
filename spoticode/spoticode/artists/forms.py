@@ -6,25 +6,25 @@ from spoticode.artists.models import Artist, ArtistLink
 class CreateArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ('artist_name', 'other_names', 'date_formed')
+        fields = ('artist_name', 'other_names', 'year_formed')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['artist_name'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['other_names'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['date_formed'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'YYYY-MM-DD'})
+        self.fields['year_formed'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'YYYY'})
 
 
 class EditArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ('artist_name', 'other_names', 'date_formed')
+        fields = ('artist_name', 'other_names', 'year_formed')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['artist_name'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['other_names'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['date_formed'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'YYYY-MM-DD'})
+        self.fields['year_formed'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'YYYY'})
 
 
 class EditArtistLinkForm(forms.ModelForm):

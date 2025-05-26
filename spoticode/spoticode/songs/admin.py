@@ -1,7 +1,7 @@
 # Django
 from django.contrib import admin
 # Project
-from spoticode.songs.models import Song, PendingSong
+from spoticode.songs.models import Song, SongLink, PendingSong
 from spoticode.songs.admin_filters import SongsAlbumsNoAlbumsFilter, SongsLinksNoLinksFilter
 from spoticode.songs.admin_actions import make_added, copy_to_songs_table
 # Other
@@ -10,15 +10,14 @@ from django_admin_listfilter_dropdown.filters import DropdownFilter
 
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album', 'spotify_link')
+    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album')
     search_fields = ('song_title', 'main_artist__artist_name', 'feat_artist', 'album_id__album_name')
     list_filter = (
         ('main_artist__artist_name', DropdownFilter),
         ('album_id__album_name', DropdownFilter),
         ('group_id__group_name', DropdownFilter),
         ('genre_id__genre_name', DropdownFilter),
-        (SongsAlbumsNoAlbumsFilter), 
-        (SongsLinksNoLinksFilter),
+        (SongsAlbumsNoAlbumsFilter),
     )
     
     def artist(self, obj):
@@ -37,6 +36,28 @@ class SongAdmin(admin.ModelAdmin):
         if obj is None:
             return ['id',]
         return []
+
+
+@admin.register(SongLink)
+class SongLinkAdmin(admin.ModelAdmin):
+    list_display = ('song', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
+    search_fields = ('for_song__song_title', 'for_song__main_artist__artist_name')
+    list_filter = (
+        ('for_song__main_artist__artist_name', DropdownFilter),
+        (SongsLinksNoLinksFilter), 
+    )
+    
+    def song(self, obj):
+        return obj.for_song if obj.for_song else '--error--'
+
+    def save_model(self, request, obj, form, change):
+        if obj.spotify_link and '?si=' in obj.spotify_link:
+            obj.spotify_link = obj.spotify_link.split('?si=')[0]
+        if obj.youtube_video_link and '&list=' in obj.youtube_video_link:
+            obj.youtube_video_link = obj.youtube_video_link.split('&list=')[0]
+        if obj.youtube_audio_link and '&list=' in obj.youtube_audio_link:
+            obj.youtube_audio_link = obj.youtube_audio_link.split('&list=')[0]
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(PendingSong)

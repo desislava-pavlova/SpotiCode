@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}SpotiCode | Songs - Edit - {{ song }}{% endblock %}
+{% block title %}Edit Links | {{ song }} | SpotiCode{% endblock %}
 
 {% block main_content %}
 
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-1000 bg-secondary rounded align-items-top justify-content-center mx-0">
+    <div class="row vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
 
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4">
-                <h4 class="mb-4 text-center">Edit Song</h4>
+                <h4 class="mb-4 text-center">Edit Song Links</h4>
+                <h6 class="mb-4 text-center">For: {{ song }}</h6>
 
                 <div class="form-floating mb-3">
-                    <form action="{% url 'song_edit' id=song.id %}" method="post">
+                    <form method="post" action="{% url 'song_links_edit' id=song_links.for_song.id %}">
                         {% csrf_token %}
                         {{ form }}
 

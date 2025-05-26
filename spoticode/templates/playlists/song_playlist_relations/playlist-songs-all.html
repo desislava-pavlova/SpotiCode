@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SpotiCode | Playlists - All Songs - {{ playlist }}{% endblock %}
+{% block title %}All Songs from {{ playlist }} | SpotiCode{% endblock %}
 
 {% block main_content %}
 
@@ -13,6 +13,7 @@
                 {% if can_create_check %}
                     <a href="{% url 'playlist_songs_preview_mass_add' id=playlist.id %}" type="button" class="btn btn-outline-primary m-2">Mass Add Songs</a>
                 {% endif %}
+                <a href="{% url 'playlist_details' id=playlist.id %}" type="button" class="btn btn-outline-light m-2">Back to Playlist</a>
             </div>
         </div>
 

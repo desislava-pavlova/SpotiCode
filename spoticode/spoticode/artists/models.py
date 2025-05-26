@@ -12,8 +12,8 @@ class Artist(models.Model):
                                    db_column='artist_name', verbose_name='Artist')
     other_names = models.CharField(null=True, blank=True, 
                                    db_column='other_names', verbose_name='Other Names')
-    date_formed = models.DateField(null=True, blank=True,
-                                   db_column='date_formed', verbose_name='Date Formed')
+    year_formed = models.PositiveIntegerField(null=True, blank=True,
+                                              db_column='year_formed', verbose_name='Formed In')
     songs_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
                                       db_column='songs_count', verbose_name='Total Songs')
     albums_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
@@ -24,7 +24,7 @@ class Artist(models.Model):
     
     @classmethod
     def field_order(cls):
-        return ['other_names', 'date_formed', 'songs_count', 'albums_count', 'id']
+        return ['other_names', 'year_formed', 'songs_count', 'albums_count', 'id']
         
 
     class Meta:

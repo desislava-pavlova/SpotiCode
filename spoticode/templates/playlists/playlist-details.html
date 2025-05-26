@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SpotiCode | Playlists - {{playlist }}{% endblock %}
+{% block title %}{{playlist }} | SpotiCode{% endblock %}
 
 {% block main_content %}
     
@@ -19,7 +19,7 @@
                 <h4 class="text-center mb-4"><u><b>{{ playlist }}</b></u></h4>
                 <ul class="list-group list-group-flush">
                     {% for field in playlist_fields %}
-                        {% if field.value %}
+                        {% if field.value or field.value == 0 %}
                             {% if field.type == "DateField" %}
                                 <li class="list-group-item bg-transparent">{{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}</li>
                             {% elif field.type == "URLField" %}
@@ -46,6 +46,10 @@
                         {% if can_delete_check %}
                             <a href="{% url 'playlist_delete' id=playlist.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
                         {% endif %}
+                    </div>
+
+                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
+                        <a href="{% url 'playlists_all'%}" type="button" class="btn btn-outline-light m-2">Back</a>
                     </div>
                 </div>
             </div>

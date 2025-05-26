@@ -29,12 +29,12 @@ class AuditLog(models.Model):
                                  db_column='new_value', verbose_name='New Value')
     last_modified = models.DateTimeField(auto_now_add=True, 
                                          db_column='last_modified', verbose_name='Last Modified')
-    user = models.ForeignKey(User, to_field='username', on_delete=models.SET(get_deleted_user), 
+    user = models.ForeignKey(User, to_field='id', on_delete=models.SET(get_deleted_user), 
                              blank=True, default=get_unknown_user, 
                              db_column='user', verbose_name='User')
 
     def __str__(self):
-        return f"{self.action} {self.model_name} ({self.object_pk})"
+        return f"{self.action} on {self.table_name}-{self.column_name} by {self.user}"
     
     class Meta:
         db_table = 'audit_log'

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SpotiCode | Albums - Edit Links - {{ album }}{% endblock %}
+{% block title %}Edit Links | {{ album }} | SpotiCode{% endblock %}
 
 {% block main_content %}
 
@@ -13,7 +13,7 @@
                 <h6 class="mb-4 text-center">For: {{ album }}</h6>
 
                 <div class="form-floating mb-3">
-                    <form method="post" action="{% url 'album_links_edit' id=album_links.id.id %}">
+                    <form method="post" action="{% url 'album_links_edit' id=album_links.for_album.id %}">
                         {% csrf_token %}
                         {{ form }}
 

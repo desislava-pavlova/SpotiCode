@@ -43,7 +43,7 @@ def show_all_albums(request):
 @can_read
 def show_details_album(request, id):
     album = get_object_or_404(Album, id=id)
-    album_links = get_object_or_404(AlbumLink, id=id)
+    album_links = get_object_or_404(AlbumLink, for_album=id)
     
     album_fields = []
     for field_name in album.__class__.field_order():
@@ -116,7 +116,7 @@ def edit_album_info(request, id):
 @can_create_or_update
 def edit_album_links(request, id):
     album = get_object_or_404(Album, id=id)
-    album_links = get_object_or_404(AlbumLink, id=id)
+    album_links = get_object_or_404(AlbumLink, for_album=id)
     form = EditAlbumLinkForm(request.POST or None, instance=album_links)
     
     if request.method == 'POST' and form.is_valid():

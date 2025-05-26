@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SpotiCode | Artists - New{% endblock %}
+{% block title %}Add Artist | SpotiCode{% endblock %}
 
 {% block main_content %}
 
@@ -18,6 +18,8 @@
 
                         <input class="btn btn-primary py-3 w-100 mb-4" type="submit" value="Add" />
                     </form>
+
+                    <a href="{% url 'artists_all'%}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
                 </div>
             </div>
         </div>

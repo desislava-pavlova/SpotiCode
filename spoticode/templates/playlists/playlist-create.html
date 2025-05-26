@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SpotiCode | Playlists - New{% endblock %}
+{% block title %}Add Playlist | SpotiCode{% endblock %}
 
 {% block main_content %}
 
@@ -34,6 +34,8 @@
 
                         <input class="btn btn-primary py-3 w-100 mb-4" type="submit" value="Add" />
                     </form>
+
+                    <a href="{% url 'playlists_all'%}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back</a>
                 </div>
             </div>
         </div>

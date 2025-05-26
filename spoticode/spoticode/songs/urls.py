@@ -11,8 +11,12 @@ urlpatterns = [
         path('<str:id>/', include([
             path('details/', views.show_details_song, name='song_details'),
             path('delete/', views.delete_song, name='song_delete'),
-            path('edit/', views.edit_song, name='song_edit'),
             path('add_to_playlist/', views.add_song_to_playlist, name='song_add_to_playlist'),
+            
+            path('edit/', include([
+                path('info/', views.edit_song_info, name='song_info_edit'),
+                path('links/', views.edit_song_links, name='song_links_edit'),
+            ])),
         ])),
    ])),
     

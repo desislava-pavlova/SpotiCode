@@ -5,11 +5,11 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
 # Project
-from spoticode.songs.models import Song, PendingSong
+from spoticode.songs.models import Song, SongLink, PendingSong
 from spoticode.playlists.models import SongPlaylistRelation
 from spoticode.artists.models import Artist
 from spoticode.albums.models import Album
-from spoticode.songs.forms import CreateSongForm, EditSongForm, AddSongToPlaylistForm, CreatePendingSongForm, EditPendingSongForm
+from spoticode.songs.forms import CreateSongForm, EditSongForm, EditSongLinkForm, AddSongToPlaylistForm, CreatePendingSongForm, EditPendingSongForm
 from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read, is_staff
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
@@ -48,6 +48,7 @@ def show_all_songs(request):
 @can_read
 def show_details_song(request, id):
     song = get_object_or_404(Song, id=id)
+    song_links = get_object_or_404(SongLink, for_song=id)
     song_playlists = SongPlaylistRelation.objects.filter(song_id=id)
     playlists = [playlist.playlist_id.playlist_name for playlist in song_playlists] if song_playlists.exists() else None
     
@@ -72,10 +73,20 @@ def show_details_song(request, id):
     if song_fields[2].get('verbose_name') == 'Album' and song_fields[2].get('value') == None:
         song_fields[2].update({'value': '--single--'})
     
+    links_fields = []
+    for field_name in song_links.__class__.field_order():
+        field = song_links._meta.get_field(field_name)
+        links_fields.append({
+            'verbose_name': field.verbose_name.title(),
+            'type': field.__class__.__name__,
+            'value': getattr(song_links, field.name),
+        })
+    
     context = {
         'curr_year': datetime.now().year,
         'song': song,
         'song_fields': song_fields,
+        'links_fields': links_fields,
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),
     }
@@ -88,13 +99,7 @@ def show_details_song(request, id):
 def create_song(request):
     form = CreateSongForm(request.POST or None)
     
-    if request.method == 'POST' and form.is_valid():
-        
-        spotify_link = form.cleaned_data['spotify_link']
-        if spotify_link and '?si=' in spotify_link:
-            spotify_link = spotify_link.split('?si=')[0]
-            form.cleaned_data['spotify_link'] = spotify_link
-        
+    if request.method == 'POST' and form.is_valid():        
         song = form.save()
         return redirect('song_details', id=song.id)
     
@@ -133,7 +138,7 @@ def add_song_to_playlist(request, id):
 
 @custom_login_required
 @can_create_or_update
-def edit_song(request, id):
+def edit_song_info(request, id):
     song = get_object_or_404(Song, id=id)
     form = EditSongForm(request.POST or None, instance=song)
     
@@ -142,12 +147,6 @@ def edit_song(request, id):
     album_queryset = Album.objects.filter(Q(album_artist=artist) | Q(album_artist=various_artists)).order_by('album_artist__artist_name', 'album_name')
     
     if request.method == 'POST' and form.is_valid():
-        
-        spotify_link = form.cleaned_data['spotify_link']
-        if spotify_link and '?si=' in spotify_link:
-            spotify_link = spotify_link.split('?si=')[0]
-            song.spotify_link = spotify_link
-        
         form.save()
         return redirect('song_details', id=song.id)
     
@@ -161,7 +160,51 @@ def edit_song(request, id):
         'form': form,
     }
     
-    return render(request, 'songs/song-edit.html', context)
+    return render(request, 'songs/song-info-edit.html', context)
+
+
+@custom_login_required
+@can_create_or_update
+def edit_song_links(request, id):
+    song = get_object_or_404(Song, id=id)
+    song_links = get_object_or_404(SongLink, for_song=id)
+    form = EditSongLinkForm(request.POST or None, instance=song_links)
+    
+    if request.method == 'POST' and form.is_valid():
+        
+        spotify_link = form.cleaned_data['spotify_link']
+        if spotify_link and '?si=' in spotify_link:
+            spotify_link = spotify_link.split('?si=')[0]
+            song_links.spotify_link = spotify_link
+        
+        wiki_curid = form.cleaned_data['wiki_curid']
+        if wiki_curid:
+            wiki_link = f'https://en.wikipedia.org/?curid={wiki_curid}'
+            song_links.wikipedia_link = wiki_link
+        elif not wiki_curid:
+            song_links.wikipedia_link = None
+        
+        youtube_video_link = form.cleaned_data['youtube_video_link']
+        if youtube_video_link and '&list=' in youtube_video_link:
+            youtube_video_link = youtube_video_link.split('&list=')[0]
+            song_links.youtube_video_link = youtube_video_link
+            
+        youtube_audio_link = form.cleaned_data['youtube_audio_link']
+        if youtube_audio_link and '&list=' in youtube_audio_link:
+            youtube_audio_link = youtube_audio_link.split('&list=')[0]
+            song_links.youtube_audio_link = youtube_audio_link
+        
+        song_links = form.save()
+        return redirect('song_details', id=song.id)
+    
+    context = {
+        'curr_year': datetime.now().year,
+        'song': song,
+        'song_links': song_links,
+        'form': form,
+    }
+    
+    return render(request, 'songs/song-links-edit.html', context)
     
 
 @custom_login_required

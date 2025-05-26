@@ -8,7 +8,7 @@ from spoticode.albums.admin_filters import AlbumsReleaseDateFilter, AlbumLinksFi
 
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ('id', 'release_date', 'artist', 'album_name', 'album_type')
+    list_display = ('id', 'release_date', 'artist', 'album_name', 'album_type', 'songs_album', 'songs_count')
     search_fields = ('album_artist__artist_name', 'album_artist__other_names', 'album_name')
     list_filter = (
         ('album_artist__artist_name', DropdownFilter),
@@ -21,17 +21,22 @@ class AlbumAdmin(admin.ModelAdmin):
     
     def get_exclude(self, request, obj=None):
         if obj is None:
-            return ['id']
+            return ['id', 'songs_count']
         return []
 
 
 @admin.register(AlbumLink)
 class AlbumLinkAdmin(admin.ModelAdmin):
     list_display = ('album', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
-    search_fields = ('id__album_name', 'id__album_artist__artist_name')
+    search_fields = ('for_album__album_name', 'for_album__album_artist__artist_name')
     list_filter = (
         (AlbumLinksFilter),
     )
     
     def album(self, obj):
-        return obj.id.album_name if obj.id else None
+        return obj.for_album.album_name if obj.for_album else None
+
+    def save_model(self, request, obj, form, change):
+        if obj.spotify_link and '?si=' in obj.spotify_link:
+            obj.spotify_link = obj.spotify_link.split('?si=')[0]
+        super().save_model(request, obj, form, change)

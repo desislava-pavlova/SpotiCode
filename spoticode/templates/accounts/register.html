@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Accounts - Register  | SpotiCode{% endblock %}
+{% block title %}Register User | SpotiCode{% endblock %}
 
 {% block main_content %}
 
@@ -17,6 +17,8 @@
 
             <input class="btn btn-primary py-3 w-100 mb-4" type="submit" value="Register" />
           </form>
+
+          <a href="{% url 'homepage'%}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back to Homepage</a>
         </div>
       </div>
     </div>

@@ -23,17 +23,15 @@ class CreateTaskForm(forms.ModelForm):
 class EditTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        exclude = ('id', 'date_created', 'last_modified', 'date_closed')
+        fields = ('related_app', 'responsible', 'status', 'priority', 'task_type')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['task_name'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['related_app'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['responsible'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['status'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['priority'].widget.attrs.update({'class': 'form-select mb-3'})
-        self.fields['task_type'].widget.attrs.update({'class': 'form-select mb-3'})
-        self.fields['description'].widget.attrs.update({'class': 'form-control mb-4'})
+        self.fields['task_type'].widget.attrs.update({'class': 'form-select mb-4'})
 
 
 

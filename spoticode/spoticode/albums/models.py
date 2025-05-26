@@ -56,9 +56,10 @@ class Album(models.Model):
 
 
 class AlbumLink(models.Model):
-    id = models.OneToOneField(to='albums.Album', to_field='id', on_delete=models.CASCADE, 
-                              primary_key=True, 
-                              db_column='id', verbose_name='ID')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
+                          db_column='id', verbose_name='ID')
+    for_album = models.OneToOneField(Album, to_field='id', on_delete=models.CASCADE, 
+                              db_column='for_album', verbose_name='For Album')
     spotify_link = models.URLField(null=True, blank=True, 
                                    db_column='spotify_link', verbose_name='Spotify Link')
     wikipedia_link = models.URLField(null=True, blank=True, 
@@ -67,7 +68,7 @@ class AlbumLink(models.Model):
                                          db_column='rateyourmusic_link', verbose_name='Rate Your Music Link')
     
     def __str__(self):
-        return f'Links for album: "{self.id.album_name}"'
+        return f'Links for album: "{self.for_album}"'
     
     @classmethod
     def field_order(cls):
@@ -75,6 +76,6 @@ class AlbumLink(models.Model):
     
     class Meta:
         db_table = 'albums_links'
-        ordering = ('id',)
+        ordering = ('for_album__album_artist', 'for_album__album_name')
         verbose_name = 'Album Link'
         verbose_name_plural = 'Albums Links'
