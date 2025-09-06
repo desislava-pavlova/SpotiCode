@@ -48,9 +48,9 @@ class EditSongLinkForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['youtube_video_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://www.youtube.com/watch?v=...'})
         self.fields['youtube_audio_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://www.youtube.com/watch?v=...'})
-        self.fields['spotify_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://open.spotify.com/album/...'})
+        self.fields['spotify_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://open.spotify.com/track/...'})
         self.fields['wiki_curid'].widget.attrs.update({'class': 'form-control mb-3','placeholder': '123...'})
-        self.fields['rateyourmusic_link'].widget.attrs.update({'class': 'form-control mb-4','placeholder': 'https://rateyourmusic.com/release/album/...'})
+        self.fields['rateyourmusic_link'].widget.attrs.update({'class': 'form-control mb-4','placeholder': 'https://rateyourmusic.com/song/...'})
         
         if self.instance and self.instance.wikipedia_link:
             self.initial['wiki_curid'] = self.instance.wikipedia_link.split('=')[1]

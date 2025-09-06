@@ -41,7 +41,7 @@ def show_all_artists(request):
 @can_read
 def show_details_artist(request, id):
     artist = get_object_or_404(Artist, id=id)
-    artist_links = get_object_or_404(ArtistLink, id=id)
+    artist_links = get_object_or_404(ArtistLink, for_artist=id)
     
     artist_fields = []
     for field_name in artist.__class__.field_order():
@@ -113,7 +113,7 @@ def edit_artist_info(request, id):
 @can_create_or_update
 def edit_artist_links(request, id):
     artist = get_object_or_404(Artist, id=id)
-    artist_links = get_object_or_404(ArtistLink, id=id)
+    artist_links = get_object_or_404(ArtistLink, for_artist=id)
     form = EditArtistLinkForm(request.POST or None, instance=artist_links)
     
     if request.method == 'POST' and form.is_valid():

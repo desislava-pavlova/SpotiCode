@@ -6,25 +6,27 @@ from spoticode.artists.models import Artist, ArtistLink
 class CreateArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ('artist_name', 'other_names', 'year_formed')
+        fields = ('artist_name', 'other_names', 'year_formed', 'origin')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['artist_name'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['other_names'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['year_formed'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'YYYY'})
+        self.fields['year_formed'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY'})
+        self.fields['origin'].widget.attrs.update({'class': 'form-control mb-4'})
 
 
 class EditArtistForm(forms.ModelForm):
     class Meta:
         model = Artist
-        fields = ('artist_name', 'other_names', 'year_formed')
+        fields = ('artist_name', 'other_names', 'year_formed', 'origin')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['artist_name'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['other_names'].widget.attrs.update({'class': 'form-control mb-3'})
-        self.fields['year_formed'].widget.attrs.update({'class': 'form-control mb-4', 'placeholder': 'YYYY'})
+        self.fields['year_formed'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY'})
+        self.fields['origin'].widget.attrs.update({'class': 'form-control mb-4'})
 
 
 class EditArtistLinkForm(forms.ModelForm):

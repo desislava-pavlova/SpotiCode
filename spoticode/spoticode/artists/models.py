@@ -14,6 +14,8 @@ class Artist(models.Model):
                                    db_column='other_names', verbose_name='Other Names')
     year_formed = models.PositiveIntegerField(null=True, blank=True,
                                               db_column='year_formed', verbose_name='Formed In')
+    origin = models.CharField(null=True, blank=True, 
+                              db_column='origin', verbose_name='Origin')
     songs_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
                                       db_column='songs_count', verbose_name='Total Songs')
     albums_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
@@ -24,7 +26,7 @@ class Artist(models.Model):
     
     @classmethod
     def field_order(cls):
-        return ['other_names', 'year_formed', 'songs_count', 'albums_count', 'id']
+        return ['other_names', 'year_formed', 'origin', 'songs_count', 'albums_count', 'id']
         
 
     class Meta:
@@ -35,9 +37,10 @@ class Artist(models.Model):
 
 
 class ArtistLink(models.Model):
-    id = models.OneToOneField(Artist, to_field='id', on_delete=models.CASCADE, 
-                              primary_key=True, 
-                              db_column='id', verbose_name='ID')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, blank=True,
+                          db_column='id', verbose_name='ID')
+    for_artist = models.OneToOneField(Artist, to_field='id', on_delete=models.CASCADE, 
+                              db_column='for_artist', verbose_name='For Artist')
     official_website = models.URLField(null=True, blank=True, unique=True, 
                                        db_column='official_website', verbose_name='Official Website')
     spotify_link = models.URLField(null=True, blank=True, unique=True, 
@@ -48,7 +51,7 @@ class ArtistLink(models.Model):
                                          db_column='rateyourmusic_link', verbose_name='Rate Your Music Link')
 
     def __str__(self):
-        return f'Links for artist: {self.id.artist_name}'
+        return f'Links for artist: {self.for_artist.artist_name}'
     
     @classmethod
     def field_order(cls):
@@ -56,6 +59,20 @@ class ArtistLink(models.Model):
 
     class Meta:
         db_table = 'artists_links'
-        ordering = ('id',)
+        ordering = ('for_artist__artist_name',)
         verbose_name = 'Artist Link'
         verbose_name_plural = 'Artists Links'
+
+
+class MissingDataArtist(Artist):
+    class Meta:
+        proxy = True
+        verbose_name = "Z_Missing Data: Artists"
+        verbose_name_plural = "Z_Missing Data: Artists"
+
+
+class MissingDataArtistLink(ArtistLink):
+    class Meta:
+        proxy = True
+        verbose_name = "Z_Missing Data: Artists Links"
+        verbose_name_plural = "Z_Missing Data: Artists Links"

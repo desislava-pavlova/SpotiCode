@@ -55,6 +55,43 @@ class AlbumLinksFilter(admin.SimpleListFilter):
         elif self.value() == 'no_wikipedia':
             return queryset.filter(wikipedia_link__isnull=True)
         elif self.value() == 'rateyourmusic':
-            return queryset.filter(rateroumusic_link__is_null=False)
+            return queryset.filter(raterourmusic_link__isnull=False)
         elif self.value() == 'no_rateyourmusic':
-            return queryset.filter(rateroumusic_link__is_null=True)
+            return queryset.filter(raterourmusic_link__isnull=True)
+
+
+class MissingDataAlbumFilter(admin.SimpleListFilter):
+    title = _('Missing Data')
+    parameter_name = 'missing_data'
+    
+    def lookups(self, request, model_admin):
+        return (
+            ('missing_release_date', _('Missing Release Date')),
+            ('missing_total_songs', _('Missing Total Songs')),
+        )
+    
+    def queryset(self, request, queryset):
+        if self.value() == 'missing_release_date':
+            return queryset.filter(release_date__isnull=True)
+        elif self.value() == 'missing_total_songs':
+            return queryset.filter(songs_album__isnull=True)
+
+
+class MissingDataAlbumLinkFilter(admin.SimpleListFilter):
+    title = _('Missing Links')
+    parameter_name = 'missing_links'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('missing_spotify', _('Missing Spotify')),
+            ('missing_wikipedia', _('Missing Wikipedia')),
+            ('missing_rateyourmusic', _('Missing RateYourMusic')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'missing_spotify':
+            return queryset.filter(spotify_link__isnull=True)
+        elif self.value() == 'missing_wikipedia':
+            return queryset.filter(wikipedia_link__isnull=True)
+        elif self.value() == 'missing_rateyourmusic':
+            return queryset.filter(rateyourmusic_link__isnull=True)

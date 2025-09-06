@@ -111,3 +111,17 @@ class PendingSong(models.Model):
         ordering = ('main_artist', 'song_title')
         verbose_name = 'Pending Song'
         verbose_name_plural = 'Pending Songs'
+
+
+class MissingDataSong(Song):
+    class Meta:
+        proxy = True
+        verbose_name = "Z_Missing Data: Songs"
+        verbose_name_plural = "Z_Missing Data: Songs"
+
+
+class MissingDataSongLink(SongLink):
+    class Meta:
+        proxy = True
+        verbose_name = "Z_Missing Data: Songs Links"
+        verbose_name_plural = "Z_Missing Data: Songs Links"

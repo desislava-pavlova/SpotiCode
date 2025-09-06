@@ -55,6 +55,52 @@ class SongsLinksNoLinksFilter(admin.SimpleListFilter):
         elif self.value() == 'no_wikipedia':
             return queryset.filter(wikipedia_link__isnull=True)
         elif self.value() == 'rateyourmusic':
-            return queryset.filter(rateroumusic_link__is_null=False)
+            return queryset.filter(rateyourmusic_link__isnull=False)
         elif self.value() == 'no_rateyourmusic':
-            return queryset.filter(rateroumusic_link__is_null=True)
+            return queryset.filter(rateyourmusic_link__isnull=True)
+
+
+class MissingDataSongFilter(admin.SimpleListFilter):
+    title = _('Missing Data')
+    parameter_name = 'missing_data'
+    
+    def lookups(self, request, model_admin):
+        return (
+            ('missing_song_year', _('Missing Release Year')),
+            ('missing_genre', _('Missing Genre')),
+            ('missing_album', _('Missing Album')),
+        )
+    
+    def queryset(self, request, queryset):
+        if self.value() == 'missing_song_year':
+            return queryset.filter(song_year__isnull=True)
+        elif self.value() == 'missing_genre':
+            return queryset.filter(genre_id__isnull=True)
+        elif self.value() == 'missing_album':
+            return queryset.filter(album_id__isnull=True)
+
+
+class MissingDataSongLinkFilter(admin.SimpleListFilter):
+    title = _('Links')
+    parameter_name = 'links'
+    
+    def lookups(self, request, model_admin):
+        return (
+            ('missing_youtube_video', _('Missing YouTube Video')),
+            ('missing_youtube_audio', _('Missing YouTube Audio')),
+            ('missing_spotify', _('Missing Spotify')),
+            ('missing_wikipedia', _('Missing Wikipedia')),
+            ('missing_rateyourmusic', _('Missing RateYourMusic')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'missing_youtube_video':
+            return queryset.filter(youtube_video_link__isnull=True)
+        elif self.value() == 'missing_youtube_audio':
+            return queryset.filter(youtube_audio_link__isnull=True)
+        elif self.value() == 'missing_spotify':
+            return queryset.filter(spotify_link__isnull=True)
+        elif self.value() == 'missing_wikipedia':
+            return queryset.filter(wikipedia_link__isnull=True)
+        elif self.value() == 'missing_rateyourmusic':
+            return queryset.filter(rateyourmusic_link__isnull=True)

@@ -1,13 +1,15 @@
 # Django
 from django.contrib import admin
+from django.db.models import Q
 # Project
-from spoticode.songs.models import Song, SongLink, PendingSong
-from spoticode.songs.admin_filters import SongsAlbumsNoAlbumsFilter, SongsLinksNoLinksFilter
+from spoticode.songs.models import Song, SongLink, PendingSong, MissingDataSong, MissingDataSongLink
+from spoticode.songs.admin_filters import SongsAlbumsNoAlbumsFilter, SongsLinksNoLinksFilter, MissingDataSongFilter, MissingDataSongLinkFilter
 from spoticode.songs.admin_actions import make_added, copy_to_songs_table
 # Other
 from django_admin_listfilter_dropdown.filters import DropdownFilter
 
 
+# Original Tables
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
     list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album')
@@ -79,3 +81,64 @@ class PendingSongAdmin(admin.ModelAdmin):
         if obj is None:
             return ['id', 'is_added', 'new_artist']
         return []
+
+
+
+# Missing Data Tables
+@admin.register(MissingDataSong)
+class MissingDataSongAdmin(admin.ModelAdmin):
+    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album')
+    search_fields = ('song_title', 'main_artist__artist_name', 'feat_artist', 'album_id__album_name')
+    list_filter = (
+        ('main_artist__artist_name', DropdownFilter),
+        ('group_id__group_name', DropdownFilter),
+        (MissingDataSongFilter),
+    )
+    
+    def artist(self, obj):
+        return obj.main_artist.artist_name if obj.main_artist else None
+    
+    def genre(self, obj):
+        return obj.genre_id.genre_name if obj.genre_id else None
+    
+    def group(self, obj):
+        return obj.group_id.group_name if obj.group_id else None
+    
+    def album(self, obj):
+        return obj.album_id.album_name if obj.album_id else None
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(Q(song_year__isnull=True) | Q(genre_id__isnull=True) | Q(album_id__isnull=True))
+    
+    def get_exclude(self, request, obj=None):
+        if obj is None:
+            return ['id',]
+        return []
+
+
+@admin.register(MissingDataSongLink)
+class MissingDataSongLinkAdmin(admin.ModelAdmin):
+    list_display = ('song', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
+    search_fields = ('for_song__song_title', 'for_song__main_artist__artist_name')
+    list_filter = (
+        ('for_song__main_artist__artist_name', DropdownFilter),
+        (MissingDataSongLinkFilter), 
+    )
+    
+    def song(self, obj):
+        return obj.for_song if obj.for_song else '--error--'
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(Q(youtube_video_link__isnull=True) | Q(youtube_audio_link__isnull=True) | Q(spotify_link__isnull=True) \
+            | Q(wikipedia_link__isnull=True) | Q(rateyourmusic_link__isnull=True))
+
+    def save_model(self, request, obj, form, change):
+        if obj.spotify_link and '?si=' in obj.spotify_link:
+            obj.spotify_link = obj.spotify_link.split('?si=')[0]
+        if obj.youtube_video_link and '&list=' in obj.youtube_video_link:
+            obj.youtube_video_link = obj.youtube_video_link.split('&list=')[0]
+        if obj.youtube_audio_link and '&list=' in obj.youtube_audio_link:
+            obj.youtube_audio_link = obj.youtube_audio_link.split('&list=')[0]
+        super().save_model(request, obj, form, change)

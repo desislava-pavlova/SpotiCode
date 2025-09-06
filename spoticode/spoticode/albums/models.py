@@ -50,7 +50,7 @@ class Album(models.Model):
 
     class Meta:
         db_table = 'albums'
-        ordering = ('album_name', 'album_artist')
+        ordering = ('album_artist__artist_name', 'album_name')
         verbose_name = 'Album'
         verbose_name_plural = 'Albums'
 
@@ -79,3 +79,17 @@ class AlbumLink(models.Model):
         ordering = ('for_album__album_artist', 'for_album__album_name')
         verbose_name = 'Album Link'
         verbose_name_plural = 'Albums Links'
+
+
+class MissingDataAlbum(Album):
+    class Meta:
+        proxy = True
+        verbose_name = "Z_Missing Data: Albums"
+        verbose_name_plural = "Z_Missing Data: Albums"
+
+
+class MissingDataAlbumLink(AlbumLink):
+    class Meta:
+        proxy = True
+        verbose_name = "Z_Missing Data: Albums Links"
+        verbose_name_plural = "Z_Missing Data: Albums Links"
