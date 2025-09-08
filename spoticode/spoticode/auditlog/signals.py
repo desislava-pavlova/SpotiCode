@@ -49,7 +49,7 @@ def log_create_or_update(sender, instance, **kwargs):
             for field in instance._meta.fields:
                 field_name = field.name
 
-                if field_name in ['last_modified', 'date_created', 'date_closed', instance._meta.pk.name]:
+                if field_name in ['date_modified', 'date_created', 'date_closed', instance._meta.pk.name]:
                     continue
                 
                 old_value = getattr(old_instance, field_name, None)

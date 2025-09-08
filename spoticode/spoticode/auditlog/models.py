@@ -27,8 +27,8 @@ class AuditLog(models.Model):
                                  db_column='old_value', verbose_name='Old Value')
     new_value = models.CharField(null=True, blank=True, 
                                  db_column='new_value', verbose_name='New Value')
-    last_modified = models.DateTimeField(auto_now_add=True, 
-                                         db_column='last_modified', verbose_name='Last Modified')
+    date_modified = models.DateTimeField(auto_now_add=True, 
+                                         db_column='date_modified', verbose_name='Date Modified')
     user = models.ForeignKey(User, to_field='id', on_delete=models.SET(get_deleted_user), 
                              blank=True, default=get_unknown_user, 
                              db_column='user', verbose_name='User')
@@ -38,6 +38,6 @@ class AuditLog(models.Model):
     
     class Meta:
         db_table = 'audit_log'
-        ordering = ('-last_modified', )
+        ordering = ('-date_modified', )
         verbose_name = 'Audit Log'
         verbose_name_plural = 'Audit Logs'

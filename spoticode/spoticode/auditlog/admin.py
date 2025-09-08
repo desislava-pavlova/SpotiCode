@@ -8,7 +8,7 @@ from django_admin_listfilter_dropdown.filters import DropdownFilter
 
 @admin.register(AuditLog)
 class AuditLogAdmin(admin.ModelAdmin):
-    list_display = ('id', 'object_id', 'table_name', 'column_name', 'action', 'old_value', 'new_value', 'last_modified', 'user')
+    list_display = ('id', 'object_id', 'table_name', 'column_name', 'action', 'old_value', 'new_value', 'date_modified', 'user')
     search_fields = ('table_name', 'column_name', 'old_value', 'new_value')
     list_filter = (
         ('table_name', DropdownFilter),

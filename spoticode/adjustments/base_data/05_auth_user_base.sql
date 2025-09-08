@@ -1,0 +1,10 @@
+INSERT INTO public.auth_user (id,"password",last_login,is_superuser,username,first_name,last_name,email,is_staff,is_active,date_joined) VALUES
+	 (1,'pbkdf2_sha256$720000$1P679UdR1jPerdW7KVsOPe$fC/DA7Frz0gzc584gb08twJZTIjnEwt9O9dwbkdBJiI=','1900-01-01 00:00:00+02',true,'admin','','','admin@spoticode.com',true,true,'1900-01-01 00:00:00+02'),
+	 (2,'pbkdf2_sha256$720000$mpajUViVuyP3lucHCKC0wj$QSsbmLNw65gOBavW+/D5zu+o/Rz/gKS+gAWU8wPs+oc=','1900-01-01 00:00:00+02',false,'default.admin','Default','Admin','default.admin@spoticode.com',true,true,'1900-01-01 00:00:00+02'),
+	 (3,'pbkdf2_sha256$720000$qHXeXroAmfCdQuxojn3pWI$HdWtnrK6oVb/xfdFU+rh+2aDH27k3pfSjp7aYCW0S8Q=','1900-01-01 00:00:00+02',false,'default.editor','Default','Editor','default.editor@spoticode.com',false,true,'1900-01-01 00:00:00+02'),
+	 (4,'pbkdf2_sha256$720000$HW1XUl0yEvLp0aFpiaRPXq$TtvTshbq54C3NXszKky0o/e7cfL5VqCvJaiB6vImsjI=','1900-01-01 00:00:00+02',false,'default.moderator','Default','Moderator','default.moderator@spoticode.com',false,true,'1900-01-01 00:00:00+02'),
+	 (5,'pbkdf2_sha256$720000$AekytSm3rBpO8HKPnuxPsi$of2QPaWcS0oX5poytzbXj39dO/P8bBMd3ApZRRqwXkQ=','1900-01-01 00:00:00+02',false,'default.viewer','Default','Viewer','default.viewer@spoticode.com',false,true,'1900-01-01 00:00:00+02'),
+	 (6,'pbkdf2_sha256$720000$O99unPej8IxQPlfXLogidB$NVz9WleLeRC6ZVVVLksfqmUgU1lffF1rgiztvKOZ/rw=',NULL,false,'auto.user','','','auto.user@spoticode.com',false,false,'1900-01-01 00:00:00+02'),
+	 (7,'pbkdf2_sha256$720000$X55oKnx7NTZBVxJVr6368O$/SM7+EbGEwojeBcoFKzwR7jOt8yfm4SB2iNnFJjeib4=',NULL,false,'deleted.user','','','deleted.user@spoticode.com',false,false,'1900-01-01 00:00:00+02'),
+	 (8,'pbkdf2_sha256$720000$tsdaawc2oFlPbVNZNlHePV$ZZKyU/mgaah322RgNC/QF0Uv2jNGHkMX6XMDnhqQS34=',NULL,false,'unknown.user','','','unknown.user@spoticode.com',false,false,'1900-01-01 00:00:00+02'),
+	 (9,'pbkdf2_sha256$720000$Uw2sE4BN0W0yBZyoOkFTuF$XJN/FYLPMkCLHEdOQf6xHj5yLJh5feJSIDFWKWFPz1s=','1900-01-01 00:00:00+02',true,'d.pavlova','Desislava','Pavlova','d.pavlova@spoticode.com',true,true,'1900-01-01 00:00:00+02');

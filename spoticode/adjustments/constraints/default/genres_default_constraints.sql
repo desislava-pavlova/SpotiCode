@@ -1,0 +1,4 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+ALTER TABLE genres ALTER COLUMN id SET DEFAULT uuid_generate_v4();
+ALTER TABLE genres ALTER COLUMN songs_count SET DEFAULT '0';

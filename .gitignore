@@ -165,3 +165,4 @@ ignore_*.py
 
 # Other ignores
 /darkpan-1.0.0/
+*.xlsx
