@@ -16,34 +16,59 @@ Here're some of the project's best features:
 
 <h2>🛠️ Installation Steps:</h2>
 
-<p>1. Needed prerequisites installed:</p>
-
+<h5>1️⃣ Clone the Repository</h5>
+<p>Clone the project repository to your local machine:</p>
 ```
-Python 3.x Django 3.x PostgreSQL
-```
-
-<p>2. Clone the Repository.</p>
-
-```
-git clone https://github.com/yourusername/spoticode.git
+git clone &lt;your-repo-url&gt;
 ```
 
-<p>3. Navigate to Project Directory</p>
-
+<h5>2️⃣ Install Python Dependencies</h5>
+<p>Open Command Prompt in your project folder and create a virtual environment:</p>
 ```
-cd spoticode
+python -m venv venv
+venv\Scripts\activate
 ```
-
-<p>4. Install Dependencies</p>
-
+<p>Then install all required packages:</p>
 ```
 pip install -r requirements.txt
 ```
 
-<p>5. Create a PostgreSQL database and update the DATABASES configuration in spoticode/settings.py with your database credentials</p>
-
-<p>6. Add the additional adjustments made to the database with</p>
-
+<h5>3️⃣ Create PostgreSQL Database</h5>
+<p>Before running the app, create a PostgreSQL database. Open <code>psql</code> or PgAdmin and run:</p>
 ```
-additional-adjustments.sql
+CREATE DATABASE your_db_name;
 ```
+
+<h5>4️⃣ Configure Environment Variables</h5>
+<p>Ensure your <code>.env</code> file contains the correct database connection info:</p>
+```
+DB_NAME=your_db_name
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+<h5>5️⃣ Apply Django Migrations</h5>
+<p>Prepare the database schema:</p>
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+<h5>6️⃣ Run Extra Database Scripts</h5>
+<p>Run the batch file <pre><code>update_db.bat</code></pre> provided in adjustments.</p>
+<p>The batch file will ask for the database name, host, user, and password. If you leave the host empty, it will default to <code>localhost</code>, and if you leave the username empty, it will default to <code>postgres</code>.</p>
+
+<h5>7️⃣ Create a Superuser (Optional)</h5>
+<p>To access the Django admin panel:</p>
+```
+python manage.py createsuperuser
+```
+
+<h5>8️⃣ Run the Development Server</h5>
+<p>Start the app using the provided batch file, which automatically activates the virtual environment and runs the server:</p>
+```
+SpotiCode.bat
+```
+<p>Access the app at <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p>
