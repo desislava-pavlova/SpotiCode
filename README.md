@@ -16,59 +16,59 @@ Here're some of the project's best features:
 
 <h2>🛠️ Installation Steps:</h2>
 
-<h5>1️⃣ Clone the Repository</h5>
+<h3>1️⃣ Clone the Repository</h3>
 <p>Clone the project repository to your local machine:</p>
-```
+<pre><code>
 git clone &lt;your-repo-url&gt;
-```
+</code></pre>
 
-<h5>2️⃣ Install Python Dependencies</h5>
+<h3>2️⃣ Install Python Dependencies</h3>
 <p>Open Command Prompt in your project folder and create a virtual environment:</p>
-```
+<pre><code>
 python -m venv venv
 venv\Scripts\activate
-```
+</code></pre>
 <p>Then install all required packages:</p>
-```
+<pre><code>
 pip install -r requirements.txt
-```
+</code></pre>
 
-<h5>3️⃣ Create PostgreSQL Database</h5>
+<h3>3️⃣ Create PostgreSQL Database</h3>
 <p>Before running the app, create a PostgreSQL database. Open <code>psql</code> or PgAdmin and run:</p>
-```
+<pre><code>
 CREATE DATABASE your_db_name;
-```
+</code></pre>
 
-<h5>4️⃣ Configure Environment Variables</h5>
+<h3>4️⃣ Configure Environment Variables</h3>
 <p>Ensure your <code>.env</code> file contains the correct database connection info:</p>
-```
+<pre><code>
 DB_NAME=your_db_name
 DB_USER=postgres
 DB_PASSWORD=your_password
 DB_HOST=localhost
 DB_PORT=5432
-```
+</code></pre>
 
-<h5>5️⃣ Apply Django Migrations</h5>
+<h3>5️⃣ Apply Django Migrations</h3>
 <p>Prepare the database schema:</p>
-```
+<pre><code>
 python manage.py makemigrations
 python manage.py migrate
-```
+</code></pre>
 
-<h5>6️⃣ Run Extra Database Scripts</h5>
-<p>Run the batch file <pre><code>update_db.bat</code></pre> provided in adjustments.</p>
+<h3>6️⃣ Run Extra Database Scripts</h3>
+<p>Run the batch file <code>update_db.bat</code> provided in adjustments.</p>
 <p>The batch file will ask for the database name, host, user, and password. If you leave the host empty, it will default to <code>localhost</code>, and if you leave the username empty, it will default to <code>postgres</code>.</p>
 
-<h5>7️⃣ Create a Superuser (Optional)</h5>
+<h3>7️⃣ Create a Superuser (Optional)</h3>
 <p>To access the Django admin panel:</p>
-```
+<pre><code>
 python manage.py createsuperuser
-```
+</code></pre>
 
-<h5>8️⃣ Run the Development Server</h5>
+<h3>8️⃣ Run the Development Server</h3>
 <p>Start the app using the provided batch file, which automatically activates the virtual environment and runs the server:</p>
-```
+<pre><code>
 SpotiCode.bat
-```
+</code></pre>
 <p>Access the app at <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a></p>
