@@ -18,7 +18,7 @@ Here're some of the project's best features:
 
 <h3>1️⃣ Clone the Repository</h3>
 <p>Clone the project repository to your local machine:</p>
-<pre><code>git clone &lt;your-repo-url&gt;</code></pre>
+<pre><code>[git clone &lt;your-repo-url&gt;](https://github.com/yourusername/spoticode.git)</code></pre>
 
 <h3>2️⃣ Install Python Dependencies</h3>
 <p>Open Command Prompt in your project folder and create a virtual environment:</p>
