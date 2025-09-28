@@ -7,12 +7,13 @@ from django.db.models import Case, When, Value, IntegerField
 # Project
 from spoticode.tasks.models import Task, TaskComment
 from spoticode.tasks.forms import CreateTaskForm, EditTaskForm, CreateTaskCommentForm, EditTaskCommentForm
-from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read
+from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read, database_required
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
 # Tasks
 @custom_login_required
+@database_required
 @can_read
 def show_all_tasks(request):
     tasks = Task.objects.all()
@@ -25,15 +26,15 @@ def show_all_tasks(request):
                     Task.objects.filter(responsible__username__icontains=query) | \
                         Task.objects.filter(related_app__icontains=query)
     
-    tasks = tasks.order_by('date_created', 'last_modified')
+    tasks = tasks.order_by('task_name')
     
     tasks = tasks.annotate(
         status_order=Case(
-            When(status='In Progress', then=Value(1)),
-            When(status='Needs Assistance', then=Value(2)),
-            When(status='Issues Found', then=Value(3)),
+            When(status='For Testing', then=Value(1)),
+            When(status='Issues Found', then=Value(2)),
+            When(status='Needs Assistance', then=Value(3)),
             When(status='On Hold', then=Value(4)),
-            When(status='For Testing', then=Value(5)),
+            When(status='In Progress', then=Value(5)),
             When(status='Not Started', then=Value(6)),
             When(status='Completed', then=Value(7)),
             When(status='Cancelled', then=Value(8)),
@@ -67,6 +68,7 @@ def show_all_tasks(request):
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_details_task(request, id):
     task = get_object_or_404(Task, id=id)
@@ -95,6 +97,7 @@ def show_details_task(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_task(request):
     form = CreateTaskForm(request.POST or None)
@@ -112,6 +115,7 @@ def create_task(request):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_task(request, id):
     task = get_object_or_404(Task, id=id)
@@ -131,6 +135,7 @@ def edit_task(request, id):
 
 
 @custom_login_required
+@database_required
 @can_delete
 def delete_task(request, id):
     task = get_object_or_404(Task, id=id)
@@ -150,6 +155,7 @@ def delete_task(request, id):
 
 # Task Comments
 @custom_login_required
+@database_required
 @can_read
 def show_details_task_comment(request, id, c_id):
     task = get_object_or_404(Task, id=id)
@@ -177,6 +183,7 @@ def show_details_task_comment(request, id, c_id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_task_comment(request, id):
     task = get_object_or_404(Task, id=id)
@@ -199,6 +206,7 @@ def create_task_comment(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_task_comment(request, id, c_id):
     task = get_object_or_404(Task, id=id)
@@ -220,6 +228,7 @@ def edit_task_comment(request, id, c_id):
 
 
 @custom_login_required
+@database_required
 @can_delete
 def delete_task_comment(request, id, c_id):
     task = get_object_or_404(Task, id=id)

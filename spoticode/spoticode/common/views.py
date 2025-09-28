@@ -6,12 +6,13 @@ from django.core.paginator import Paginator
 # Project
 from spoticode.common.models import MusicGroup, Genre
 from spoticode.common.forms import CreateMusicGroupForm, EditMusicGroupForm, CreateGenreForm, EditGenreForm
-from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_read, is_staff
+from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_read, is_staff, database_required
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker
 
 
 # Music Groups
 @custom_login_required
+@database_required
 @can_read
 def show_all_music_groups(request):
     music_groups = MusicGroup.objects.all()
@@ -38,6 +39,7 @@ def show_all_music_groups(request):
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_details_music_group(request, id):
     music_group = get_object_or_404(MusicGroup, id=id)
@@ -63,6 +65,7 @@ def show_details_music_group(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_music_group(request):
     form = CreateMusicGroupForm(request.POST or None)
@@ -80,6 +83,7 @@ def create_music_group(request):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_music_group(request, id):
     music_group = get_object_or_404(MusicGroup, id=id)
@@ -99,6 +103,7 @@ def edit_music_group(request, id):
 
 
 @custom_login_required
+@database_required
 @is_staff
 def delete_music_group(request, id):
     music_group = get_object_or_404(MusicGroup, id=id)
@@ -118,6 +123,7 @@ def delete_music_group(request, id):
 
 # Genres
 @custom_login_required
+@database_required
 @can_read
 def show_all_genres(request):
     genres = Genre.objects.all()
@@ -144,6 +150,7 @@ def show_all_genres(request):
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_details_genre(request, id):
     genre = get_object_or_404(Genre, id=id)
@@ -169,6 +176,7 @@ def show_details_genre(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_genre(request):
     form = CreateGenreForm(request.POST or None)
@@ -186,6 +194,7 @@ def create_genre(request):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_genre(request, id):
     genre = get_object_or_404(Genre, id=id)
@@ -205,6 +214,7 @@ def edit_genre(request, id):
 
 
 @custom_login_required
+@database_required
 @is_staff
 def delete_genre(request, id):
     genre = get_object_or_404(Genre, id=id)

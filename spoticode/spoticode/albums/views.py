@@ -6,12 +6,13 @@ from django.core.paginator import Paginator
 # Project
 from spoticode.albums.models import Album, AlbumLink
 from spoticode.albums.forms import CreateAlbumForm, EditAlbumForm, EditAlbumLinkForm
-from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read
+from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read, database_required
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
 # Albums
 @custom_login_required
+@database_required
 @can_read
 def show_all_albums(request):
     albums = Album.objects.all()
@@ -40,6 +41,7 @@ def show_all_albums(request):
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_details_album(request, id):
     album = get_object_or_404(Album, id=id)
@@ -77,6 +79,7 @@ def show_details_album(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_album(request):
     form = CreateAlbumForm(request.POST or None)
@@ -94,6 +97,7 @@ def create_album(request):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_album_info(request, id):
     album = get_object_or_404(Album, id=id)
@@ -113,6 +117,7 @@ def edit_album_info(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_album_links(request, id):
     album = get_object_or_404(Album, id=id)
@@ -147,6 +152,7 @@ def edit_album_links(request, id):
 
 
 @custom_login_required
+@database_required
 @can_delete
 def delete_album(request, id):
     album = get_object_or_404(Album, id=id)

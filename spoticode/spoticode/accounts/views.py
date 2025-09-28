@@ -1,12 +1,14 @@
 from datetime import datetime
 # Django
 from django.urls import reverse
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, login, authenticate, update_session_auth_hash
 from django.contrib.auth.models import User, Group
 # Project
 from spoticode.accounts.forms import RegisterUserForm, EditUserForm, PasswordChangeForm
-from spoticode.web.access_validators import custom_login_required, is_staff, is_user_self
+from spoticode.web.access_validators import custom_login_required, is_staff, is_user_self, database_required
+from spoticode.web.routers import set_current_db
 
 
 def log_in(request):
@@ -23,7 +25,7 @@ def log_in(request):
                 return redirect('user_first_login', id=user.id)
             else:
                 login(request, user)
-                return redirect('homepage')
+                return redirect('database_choose')
         else:
             error_message = 'Your username or password is incorrect.'
     
@@ -36,12 +38,41 @@ def log_in(request):
 
 
 @custom_login_required
+def choose_database(request): 
+    available_dbs = []
+    
+    for db in settings.ACTIVE_DATABASES:
+        try:
+            if User.objects.using(db).filter(username=request.user.username).exists():
+                available_dbs.append(db)
+        except Exception:
+            continue
+    available_dbs = sorted(available_dbs)
+    
+    if request.method == "POST":
+        db_choice = request.POST.get("database")
+        if db_choice in available_dbs:
+            request.session["db_choice"] = db_choice
+            set_current_db(db_choice)
+            
+            return redirect("homepage")
+        
+    context = {
+        'curr_year': datetime.now().year,
+        'available_dbs': available_dbs,
+    }
+
+    return render(request, "accounts/choose-database.html", context)
+
+
+@custom_login_required
 def log_out(request):
     logout(request)
     return redirect(reverse('homepage'))
 
 
 @custom_login_required
+@database_required
 @is_staff
 def register_user(request):
     form = RegisterUserForm(request.POST or None)
@@ -71,7 +102,7 @@ def first_login_user(request, id):
             form.save()
             viewer_group, created = Group.objects.get_or_create(name='Viewer')
             user.groups.add(viewer_group)
-            return redirect('homepage')
+            return redirect('database_choose')
     
     context = {
         'curr_year': datetime.now().year,
@@ -82,6 +113,7 @@ def first_login_user(request, id):
 
 
 @custom_login_required
+@database_required
 @is_user_self
 def show_details_user(request, id):
     user = get_object_or_404(User, id=id)
@@ -97,6 +129,7 @@ def show_details_user(request, id):
 
 
 @custom_login_required
+@database_required
 @is_user_self
 def edit_user_info(request, id):
     user = get_object_or_404(User, id=id)
@@ -116,6 +149,7 @@ def edit_user_info(request, id):
 
 
 @custom_login_required
+@database_required
 @is_user_self
 def edit_user_password(request, id):
     user = get_object_or_404(User, id=id)

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+
+    <div class="container-fluid">
+        <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-20">
+                <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+                    <div class="d-flex align-items-center justify-content-center mb-3">
+                        <h3>Choose a database</h3>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for db in available_dbs %}
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent">
+                                    <button type="submit" name="database" value="{{ db }}" class="btn btn-outline-light py-3 w-100 mb-4">{{ db|title }}</button>
+                                </li>
+                            </ul>
+                        {% endfor %}
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

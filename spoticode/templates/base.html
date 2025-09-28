@@ -51,27 +51,30 @@
                     <h3 class="text-primary"><i class="fa me-2"></i>SpotiCode</h3>
                 </a>
 
-                <div class="d-flex align-items-center ms-4 mb-4">
+                <div class="d-flex align-items-center mb-4">
                     <div class="ms-3">
                         {% if user.is_authenticated %}
-                            <h6 class="mb-0"> {{ request.user.username }} </h6>
-                            <span> {{ request.user.groups.all.0.name }} </span>
-                        {% else %}
-                            <h6 class="mb-0">Visitor</h6>
-                            <span></span>
+                            <!-- <h6 class="mb-0"> {{ request.user.username }} </h6> -->
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent text-white"> {{ request.user.username }} </li>
+                                <li class="list-group-item bg-transparent"> {{ request.user.groups.all.0.name }} </li>
+                                <li class="list-group-item bg-transparent"> {{ current_db|title }} </li>
+                            </ul>
                         {% endif %}
                     </div>
                 </div>
 
                 <div class="navbar-nav w-100">
-                    <a href="{% url 'music_groups_all' %}" class="nav-item nav-link"><i class="fa fa-database me-2"></i>Music Groups</a>
-                    <a href="{% url 'genres_all' %}" class="nav-item nav-link"><i class="fa fa-tag me-2"></i>Genres</a>
-                    <a href="{% url 'artists_all' %}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Artists</a>
-                    <a href="{% url 'albums_all' %}" class="nav-item nav-link"><i class="fa fa-compact-disc me-2"></i>Albums</a>
-                    <a href="{% url 'pending_songs_all' %}" class="nav-item nav-link"><i class="fa fa-spinner me-2"></i>Pending Songs</a>
-                    <a href="{% url 'songs_all' %}" class="nav-item nav-link"><i class="fa fa-music me-2"></i>Songs</a>
-                    <a href="{% url 'playlists_all' %}" class="nav-item nav-link"><i class="fa fa-play me-2"></i>Playlists</a>
-                    <a href="{% url 'tasks_all' %}" class="nav-item nav-link"><i class="fa fa-thumbtack me-2"></i>Tasks</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'music_groups_all' %}" class="nav-item nav-link"><i class="fa fa-database me-2"></i>Music Groups</a>
+                        <a href="{% url 'genres_all' %}" class="nav-item nav-link"><i class="fa fa-tag me-2"></i>Genres</a>
+                        <a href="{% url 'artists_all' %}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Artists</a>
+                        <a href="{% url 'albums_all' %}" class="nav-item nav-link"><i class="fa fa-compact-disc me-2"></i>Albums</a>
+                        <a href="{% url 'pending_songs_all' %}" class="nav-item nav-link"><i class="fa fa-spinner me-2"></i>Pending Songs</a>
+                        <a href="{% url 'songs_all' %}" class="nav-item nav-link"><i class="fa fa-music me-2"></i>Songs</a>
+                        <a href="{% url 'playlists_all' %}" class="nav-item nav-link"><i class="fa fa-play me-2"></i>Playlists</a>
+                        <a href="{% url 'tasks_all' %}" class="nav-item nav-link"><i class="fa fa-thumbtack me-2"></i>Tasks</a>
+                    {% endif %}
                 </div>
             </nav>
         </div>
@@ -102,6 +105,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                                     <a href="{% url 'user_details' id=user.id %}" class="dropdown-item">My Profile</a>
+                                    <a href="{% url 'database_choose' %}" class="dropdown-item">Choose Database</a>
                                     <a href="{% url 'user_logout' %}" class="dropdown-item">Log Out</a>
                             </div>
                         </div>

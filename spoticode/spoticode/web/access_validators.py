@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
+# Project
+from spoticode.web.routers import get_current_db
 
 
 def custom_login_required(func):
@@ -15,6 +17,18 @@ def custom_login_required(func):
             return decorated_view_func(request, *args, **kwargs)
         else:
             return redirect('user_login')
+
+    return wrapper
+
+
+def database_required(func):
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        current_db = get_current_db()
+        if not current_db or current_db == 'default':
+            return redirect('database_choose')
+        else:
+            return func(request, *args, **kwargs)
 
     return wrapper
 

@@ -10,12 +10,13 @@ from spoticode.playlists.models import SongPlaylistRelation
 from spoticode.artists.models import Artist
 from spoticode.albums.models import Album
 from spoticode.songs.forms import CreateSongForm, EditSongForm, EditSongLinkForm, AddSongToPlaylistForm, CreatePendingSongForm, EditPendingSongForm
-from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read, is_staff
+from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read, is_staff, database_required
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
 # Songs
 @custom_login_required
+@database_required
 @can_read
 def show_all_songs(request):
     songs = Song.objects.all()
@@ -45,6 +46,7 @@ def show_all_songs(request):
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_details_song(request, id):
     song = get_object_or_404(Song, id=id)
@@ -53,7 +55,7 @@ def show_details_song(request, id):
     playlists = [playlist.playlist_id.playlist_name for playlist in song_playlists] if song_playlists.exists() else None
     
     if playlists:
-        playlists = ', '.join(playlists)
+        playlists = ', '.join(sorted(playlists))
         
     song_fields = []
     for field_name in song.__class__.field_order():
@@ -95,6 +97,7 @@ def show_details_song(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_song(request):
     form = CreateSongForm(request.POST or None)
@@ -137,6 +140,7 @@ def add_song_to_playlist(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_song_info(request, id):
     song = get_object_or_404(Song, id=id)
@@ -164,6 +168,7 @@ def edit_song_info(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_song_links(request, id):
     song = get_object_or_404(Song, id=id)
@@ -208,6 +213,7 @@ def edit_song_links(request, id):
     
 
 @custom_login_required
+@database_required
 @can_delete
 def delete_song(request, id):
     song = get_object_or_404(Song, id=id)
@@ -227,6 +233,7 @@ def delete_song(request, id):
 
 # Pending Songs
 @custom_login_required
+@database_required
 @can_read
 def show_all_pending_songs(request):
     pending_songs = PendingSong.objects.all()
@@ -258,6 +265,7 @@ def show_all_pending_songs(request):
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_details_pending_song(request, id):
     pending_song = get_object_or_404(PendingSong, id=id)
@@ -283,6 +291,7 @@ def show_details_pending_song(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_pending_song(request):
     form = CreatePendingSongForm(request.POST or None)
@@ -300,6 +309,7 @@ def create_pending_song(request):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_pending_song(request, id):
     pending_song = get_object_or_404(PendingSong, id=id)
@@ -319,6 +329,7 @@ def edit_pending_song(request, id):
 
 
 @custom_login_required
+@database_required
 @can_delete
 def delete_pending_song(request, id):
     pending_song = get_object_or_404(PendingSong, id=id)
@@ -336,6 +347,7 @@ def delete_pending_song(request, id):
 
 
 @custom_login_required
+@database_required
 @is_staff
 def delete_added_pending_songs(request):
     pending_songs = PendingSong.objects.filter(is_added=True)

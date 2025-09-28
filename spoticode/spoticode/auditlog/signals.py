@@ -11,7 +11,7 @@ RUN_SIGNAL = True
 
 @receiver(pre_save)
 def log_create_or_update(sender, instance, **kwargs):
-    if sender.__name__ == 'AuditLog':
+    if sender.__name__ == 'AuditLog' or sender._meta.db_table.startswith('django_'):
         return
     
     if not RUN_SIGNAL:

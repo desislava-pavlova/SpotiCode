@@ -6,11 +6,12 @@ from django.core.paginator import Paginator
 # Project
 from spoticode.artists.models import Artist, ArtistLink
 from spoticode.artists.forms import CreateArtistForm, EditArtistForm, EditArtistLinkForm
-from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read
+from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read, database_required
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_all_artists(request):
     artists = Artist.objects.all()
@@ -38,6 +39,7 @@ def show_all_artists(request):
 
 
 @custom_login_required
+@database_required
 @can_read
 def show_details_artist(request, id):
     artist = get_object_or_404(Artist, id=id)
@@ -74,6 +76,7 @@ def show_details_artist(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_artist(request):
     form = CreateArtistForm(request.POST or None)
@@ -91,6 +94,7 @@ def create_artist(request):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_artist_info(request, id):
     artist = get_object_or_404(Artist, id=id)
@@ -110,6 +114,7 @@ def edit_artist_info(request, id):
 
 
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_artist_links(request, id):
     artist = get_object_or_404(Artist, id=id)
@@ -144,6 +149,7 @@ def edit_artist_links(request, id):
 
 
 @custom_login_required
+@database_required
 @can_delete
 def delete_artist(request, id):
     artist = get_object_or_404(Artist, id=id)

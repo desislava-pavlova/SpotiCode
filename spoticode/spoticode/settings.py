@@ -56,6 +56,7 @@ MIDDLEWARE = [
     
     # Custom
     'spoticode.auditlog.middleware.CurrentUserMiddleware',
+    'spoticode.web.middleware.DatabaseSelectorMiddleware',
 ]
 
 ROOT_URLCONF = 'spoticode.urls'
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'spoticode.web.access_checkers.current_db',
             ],
         },
     },
@@ -82,13 +84,34 @@ WSGI_APPLICATION = 'spoticode.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    }
+        'NAME': os.environ.get('DB_NAME_DEFAULT'),
+        'USER': os.environ.get('DB_USER_DEFAULT'),
+        'PASSWORD': os.environ.get('DB_PASSWORD_DEFAULT'),
+        'HOST': os.environ.get('DB_HOST_DEFAULT'),
+        'PORT': os.environ.get('DB_PORT_DEFAULT'),
+    },
+    'rock_database': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME_1'),
+        'USER': os.environ.get('DB_USER_1'),
+        'PASSWORD': os.environ.get('DB_PASSWORD_1'),
+        'HOST': os.environ.get('DB_HOST_1'),
+        'PORT': os.environ.get('DB_PORT_1'),
+    },
+    'balkan_database': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME_2'),
+        'USER': os.environ.get('DB_USER_2'),
+        'PASSWORD': os.environ.get('DB_PASSWORD_2'),
+        'HOST': os.environ.get('DB_HOST_2'),
+        'PORT': os.environ.get('DB_PORT_2'),
+    },
 }
+
+ACTIVE_DATABASES = ('default', 'rock_database', 'balkan_database')
+
+
+DATABASE_ROUTERS = ['spoticode.web.routers.UserDBRouter']
 
 
 # AUTH_PASSWORD_VALIDATORS = [

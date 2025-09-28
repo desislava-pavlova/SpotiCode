@@ -7,6 +7,7 @@ urlpatterns = [
     path('login/', views.log_in, name='user_login'),
     path('logout/', views.log_out, name='user_logout'),
     path('register/', views.register_user, name='user_register'),
+    path('choose_database/', views.choose_database, name='database_choose'),
    
     path('<int:id>/', include([
         path('first_login/', views.first_login_user, name='user_first_login'),
