@@ -1,3 +1,5 @@
+-- public.lookup_music_groups source
+
 CREATE OR REPLACE VIEW public.lookup_music_groups
 AS SELECT id,
     group_name,

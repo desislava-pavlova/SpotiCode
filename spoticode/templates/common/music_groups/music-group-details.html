@@ -5,45 +5,51 @@
 {% block main_content %}
 
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
+    <div class="row vh-auto min-vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
 
-        <div class="col-sm-12 col-xl-6">
-            <div class="bg-secondary rounded h-100 p-4">
-                <h4 class="text-center mb-4">Music Group Details</h4>
-                <h4 class="text-center mb-4"><u><b>{{ music_group }}</b></u></h4>
+        <!-- Music Groups -->
+        <div class="bg-secondary rounded p-4">
+            <h3 class="text-center text-light m-4 mb-4">Music Group Details</h3>
+            <h3 class="text-center text-white-50 mb-4"><u><b>{{ music_group }}</b></u></h3>
+        </div>
 
-                <ul class="list-group list-group-flush">
-                    {% for field in music_group_fields %}
-                        <li class="list-group-item bg-transparent">
-                            {% if field.value or field.value == 0 %}
-                                {% if field.type == "DateField" %}
-                                    {{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}
-                                {% else %}
-                                    {{ field.verbose_name }}: {{ field.value}}
-                                {% endif %}
+        <div class="col-xl-6 align-items-top">
+            <ul class="d-flex list-group list-group-flush">
+                {% for field in music_group_fields %}
+                    <li class="list-group-item bg-transparent">
+                        {% if field.value or field.value == 0 %}
+                            {% if field.type == "DateField" %}
+                                {{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}
                             {% else %}
-                                {{ field.verbose_name }}:
+                                {{ field.verbose_name }}: {{ field.value}}
                             {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-
-                <div class="bg-secondary rounded h-50 p-4">
-                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
-                        {% if can_edit_check %}
-                            <a href="{% url 'music_group_edit' id=music_group.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit</a>
+                        {% else %}
+                            {{ field.verbose_name }}:
                         {% endif %}
-                        {% if is_staff_check %}
-                            <a href="{% url 'music_group_delete' id=music_group.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
-                        {% endif %}
-                    </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
-                        <a href="{% url 'music_groups_all'%}" type="button" class="btn btn-outline-light m-2">Back</a>
-                    </div>
+        <div class="d-flex bg-secondary rounded h-auto">
+            <div class="col-sm-3 p-3"></div>
+            <div class="col-sm-6 p-3">
+                <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
+                    {% if can_edit_check %}
+                        <a href="{% url 'music_group_edit' id=music_group.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit</a>
+                    {% endif %}
+                    {% if is_staff_check %}
+                        <a href="{% url 'music_group_delete' id=music_group.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
+                    {% endif %}
+                </div>
+
+                <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
+                    <a href="{% url 'music_groups_all'%}" type="button" class="btn btn-outline-light m-2">Back</a>
                 </div>
             </div>
+            <div class="col-sm-3 p-3"></div>
         </div>
+
     </div>
 </div>
 

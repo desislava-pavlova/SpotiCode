@@ -5,7 +5,7 @@
 {% block main_content %}
 
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-1000 bg-secondary rounded align-items-center justify-content-center mx-0">
+    <div class="row vh-auto min-vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
 
         <!-- Add Button -->
         <div class="col-sm-12 col-xl-6">
@@ -32,21 +32,21 @@
             <div class="bg-secondary rounded h-100 p-20">
 
                 {% if total_active_tasks == 0 %}
-                    <h4 class="text-left">No Active Tasks</h4>
+                    <h3 class="text-left text-white-50">No Active Tasks</h3>
                 {% else %}
-                    <h3 class="text-left">Total Active Tasks: {{ total_active_tasks }}</h3>
+                    <h3 class="text-left text-white-50">Total Active Tasks: {{ total_active_tasks }}</h3>
                 {% endif %}
 
                 <!-- Table -->
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
                     <thead>
-                        <tr class="text-white">
-                            <th scope="col" style="text-align:center">Task</th>
-                            <th scope="col" style="text-align:center">Type</th>
-                            <th scope="col" style="text-align:center">Priority</th>
-                            <th scope="col" style="text-align:center">App</th>
-                            <th scope="col" style="text-align:center">Responsible</th>
-                            <th scope="col" style="text-align:center">Status</th>
+                        <tr class="text-white-50">
+                            <th scope="col" style="text-align:center"><u>Task<u></th>
+                            <th scope="col" style="text-align:center"><u>Type<u></th>
+                            <th scope="col" style="text-align:center"><u>Priority<u></th>
+                            <th scope="col" style="text-align:center"><u>App<u></th>
+                            <th scope="col" style="text-align:center"><u>Responsible<u></th>
+                            <th scope="col" style="text-align:center"><u>Status<u></th>
                             <th scope="col" style="text-align:center"></th>
                         </tr>
                     </thead>
@@ -100,24 +100,23 @@
             </div>
         </div>
 
-            
         <!-- Pages -->
         <div class="pagination justify-content-center align-items-center mt-4">
             <ul class="pagination">
                 <li class="page-item">
-                    <a href="?page=1" class="btn btn-primary">&laquo;</a>
+                    <a href="?page=1" class="btn btn-link m-2">&laquo;</a>
                     {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-primary" >&lt;</a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-link m-2" >&lt;</a>
                     {% else %}
-                        <a href="?page=1" class="btn btn-primary" >&lt;</a>
+                        <a href="?page=1" class="btn btn-link m-2" >&lt;</a>
                     {% endif %}
-                    <a href="?page={{ page_obj.number }}" class="btn btn-primary" >{{ page_obj.number }}</a>
+                    <a href="?page={{ page_obj.number }}" class="btn btn-outline-primary m-2" >{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
                     {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-primary" >&gt;</a>
+                        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-link m-2" >&gt;</a>
                     {% else %}
-                        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary" >&gt;</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-link m-2" >&gt;</a>
                     {% endif %}
-                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary">&raquo;</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-link m-2">&raquo;</a>
                 </li>
             </ul>
         </div>

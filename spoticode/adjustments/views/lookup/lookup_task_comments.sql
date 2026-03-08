@@ -1,3 +1,5 @@
+-- public.lookup_task_comments source
+
 CREATE OR REPLACE VIEW public.lookup_task_comments
 AS SELECT task_comments.id,
     task_comments.comment_text,

@@ -162,6 +162,7 @@ cython_debug/
 /migrations/
 caller.py
 ignore_*.py
+migrate_changes.bat
 
 # Other ignores
 /darkpan-1.0.0/

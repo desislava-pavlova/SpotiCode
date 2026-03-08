@@ -1,21 +1,22 @@
 # Django
 from django.contrib import admin
 from django.db.models import Q
-from django_admin_listfilter_dropdown.filters import DropdownFilter
 # Project
 from spoticode.albums.models import Album, AlbumLink, MissingDataAlbum, MissingDataAlbumLink
 from spoticode.albums.admin_filters import AlbumsReleaseDateFilter, AlbumLinksFilter, MissingDataAlbumFilter, MissingDataAlbumLinkFilter
+# Other
+from django_admin_listfilter_dropdown.filters import DropdownFilter
 
 
-# Original Tables
+# ----- Original Tables -----
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
     list_display = ('id', 'release_date', 'artist', 'album_name', 'album_type', 'songs_album', 'songs_count')
     search_fields = ('album_artist__artist_name', 'album_artist__other_names', 'album_name')
     list_filter = (
         ('album_artist__artist_name', DropdownFilter),
-        ('album_type', DropdownFilter),
         (AlbumsReleaseDateFilter),
+        ('album_type', DropdownFilter),
     )
     
     def artist(self, obj):
@@ -29,9 +30,10 @@ class AlbumAdmin(admin.ModelAdmin):
 
 @admin.register(AlbumLink)
 class AlbumLinkAdmin(admin.ModelAdmin):
-    list_display = ('album', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
+    list_display = ('album', 'spotify_link', 'wikipedia_link', 'discogs_link', 'rateyourmusic_link')
     search_fields = ('for_album__album_name', 'for_album__album_artist__artist_name')
     list_filter = (
+        ('for_album__album_artist__artist_name', DropdownFilter),
         (AlbumLinksFilter),
     )
     
@@ -45,7 +47,7 @@ class AlbumLinkAdmin(admin.ModelAdmin):
 
 
 
-# Missing Data Tables
+# ----- Missing Data Tables -----
 @admin.register(MissingDataAlbum)
 class MissingDataAlbumAdmin(admin.ModelAdmin):
     list_display = ('id', 'release_date', 'artist', 'album_name', 'album_type', 'songs_album', 'songs_count')
@@ -70,9 +72,10 @@ class MissingDataAlbumAdmin(admin.ModelAdmin):
 
 @admin.register(MissingDataAlbumLink)
 class MissingDataAlbumLinkAdmin(admin.ModelAdmin):
-    list_display = ('album', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
+    list_display = ('album', 'spotify_link', 'wikipedia_link', 'discogs_link', 'rateyourmusic_link')
     search_fields = ('for_album__album_name', 'for_album__album_artist__artist_name')
     list_filter = (
+        ('for_album__album_artist__artist_name', DropdownFilter),
         (MissingDataAlbumLinkFilter),
     )
     
@@ -81,8 +84,8 @@ class MissingDataAlbumLinkAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(Q(spotify_link__isnull=True) \
-            | Q(wikipedia_link__isnull=True) | Q(rateyourmusic_link__isnull=True))
+        return qs.filter(Q(spotify_link__isnull=True) | Q(wikipedia_link__isnull=True) \
+            | Q(rateyourmusic_link__isnull=True) | Q(discogs_link__isnull=True))
 
     def save_model(self, request, obj, form, change):
         if obj.spotify_link and '?si=' in obj.spotify_link:

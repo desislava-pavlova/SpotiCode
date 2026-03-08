@@ -1,3 +1,5 @@
+-- public.missing_data_from_albums_links source
+
 CREATE OR REPLACE VIEW public.missing_data_from_albums_links
 AS SELECT albums_links.id,
     artists.artist_name,

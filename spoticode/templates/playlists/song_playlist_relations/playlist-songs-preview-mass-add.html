@@ -5,7 +5,7 @@
 {% block main_content %}
     
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-1000 bg-secondary rounded align-items-center justify-content-center mx-0">
+    <div class="row vh-auto min-vh-100 bg-secondary rounded align-items-center justify-content-center mx-0">
 
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4">
@@ -21,7 +21,7 @@
                     <button class="btn btn-outline-primary w-100 m-2" type="submit">Generate</button>
                 </form>
 
-                <form method="post" action="{% url 'playlist_songs_mass_add' id=playlist.id %}">
+                <form method="post" action="{% url 'playlist_songs_mass_add' id=playlist.id songs=songs %}">
                     {% csrf_token %}
                     <input type="hidden" name="playlist_id" value="{{ playlist.id }}">
                     <button class="btn btn-primary w-100 m-2" type="submit">Mass Add</button>

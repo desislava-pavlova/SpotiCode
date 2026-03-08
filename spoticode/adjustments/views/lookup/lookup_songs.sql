@@ -1,3 +1,5 @@
+-- public.lookup_songs source
+
 CREATE OR REPLACE VIEW public.lookup_songs
 AS SELECT s.id AS "ID",
     s.song_title AS "Title",

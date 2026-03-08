@@ -1,3 +1,5 @@
+-- public.auto_errors_missing_albums_links source
+
 CREATE OR REPLACE VIEW public.auto_errors_missing_albums_links
 AS SELECT albums.id AS album_id,
     artists.artist_name AS artist,

@@ -11,6 +11,9 @@ from spoticode.web.access_validators import custom_login_required, is_staff, is_
 from spoticode.web.routers import set_current_db
 
 
+
+# ---------- Account Views ---------- #
+# -- Log in
 def log_in(request):
     error_message = ""
     
@@ -37,6 +40,14 @@ def log_in(request):
     return render(request, 'accounts/login.html', context)
 
 
+# -- Log Out
+@custom_login_required
+def log_out(request):
+    logout(request)
+    return redirect(reverse('homepage'))
+
+
+# -- Choose Database
 @custom_login_required
 def choose_database(request): 
     available_dbs = []
@@ -65,12 +76,7 @@ def choose_database(request):
     return render(request, "accounts/choose-database.html", context)
 
 
-@custom_login_required
-def log_out(request):
-    logout(request)
-    return redirect(reverse('homepage'))
-
-
+# -- Register User
 @custom_login_required
 @database_required
 @is_staff
@@ -91,6 +97,7 @@ def register_user(request):
     return render(request, 'accounts/register.html', context)
 
 
+# -- First-time Log In
 @custom_login_required
 @is_user_self
 def first_login_user(request, id):
@@ -112,6 +119,7 @@ def first_login_user(request, id):
     return render(request, 'accounts/first-login-user.html', context)
 
 
+# -- Show Details
 @custom_login_required
 @database_required
 @is_user_self
@@ -128,6 +136,7 @@ def show_details_user(request, id):
     return render(request, 'accounts/details-user.html', context)
 
 
+# -- Edit Info
 @custom_login_required
 @database_required
 @is_user_self
@@ -148,6 +157,7 @@ def edit_user_info(request, id):
     return render(request, 'accounts/edit-user.html', context)
 
 
+# -- Edit Password
 @custom_login_required
 @database_required
 @is_user_self

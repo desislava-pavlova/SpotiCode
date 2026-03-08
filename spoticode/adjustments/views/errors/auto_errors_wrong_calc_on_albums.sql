@@ -1,3 +1,5 @@
+-- public.auto_errors_wrong_calc_on_albums source
+
 CREATE OR REPLACE VIEW public.auto_errors_wrong_calc_on_albums
 AS WITH real_values AS (
          SELECT sub_alb.id AS sub_id,

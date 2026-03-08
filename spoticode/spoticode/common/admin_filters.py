@@ -1,10 +1,12 @@
-from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 # Project
 from spoticode.common.models import Genre
+# Other 
+from django_admin_listfilter_dropdown.filters import SimpleDropdownFilter
 
 
-class GenresFirstLetterFilter(admin.SimpleListFilter):
+# ----- Genres Filters -----
+class GenresFirstLetterFilter(SimpleDropdownFilter):
     title = _('First Letter')
     parameter_name = 'genre_name'
     

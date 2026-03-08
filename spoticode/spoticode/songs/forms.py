@@ -4,6 +4,22 @@ from spoticode.songs.models import Song, SongLink, PendingSong
 from spoticode.playlists.models import Playlist
 
 
+def get_all_keywords():
+    from spoticode.songs.models import Song
+
+    notes_qs = Song.objects.values_list('notes', flat=True)
+    keywords = set()
+    
+    for note in notes_qs:
+        if note:
+            for keyword in note.split(';'):
+                keyword = keyword.strip()
+                if keyword:
+                    keywords.add(keyword)
+    
+    return sorted(keywords)
+
+
 # Songs
 class CreateSongForm(forms.ModelForm):
     class Meta:
@@ -11,6 +27,8 @@ class CreateSongForm(forms.ModelForm):
         exclude = ('song_id', )
         
     def __init__(self, *args, **kwargs):
+        keywords = ('; ').join(get_all_keywords())
+        
         super().__init__(*args, **kwargs)
         self.fields['song_title'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['main_artist'].widget.attrs.update({'class': 'form-select mb-3'})
@@ -18,7 +36,18 @@ class CreateSongForm(forms.ModelForm):
         self.fields['genre_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['song_year'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY'})
         self.fields['group_id'].widget.attrs.update({'class': 'form-select mb-3'})
-        self.fields['album_id'].widget.attrs.update({'class': 'form-select mb-4'})
+        self.fields['album_id'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['notes'].widget.attrs.update({'class': 'form-select mb-4'})
+        self.fields['notes'].help_text = f'{keywords}'
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        notes = cleaned_data.get('notes')
+
+        if not notes:
+            self.cleaned_data['notes'] = None
+
+        return cleaned_data
 
 
 class EditSongForm(forms.ModelForm):
@@ -27,6 +56,8 @@ class EditSongForm(forms.ModelForm):
         exclude = ('song_id', )
         
     def __init__(self, *args, **kwargs):
+        keywords = ('; ').join(get_all_keywords())
+        
         super().__init__(*args, **kwargs)
         self.fields['song_title'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['main_artist'].widget.attrs.update({'class': 'form-select mb-3'})
@@ -34,7 +65,18 @@ class EditSongForm(forms.ModelForm):
         self.fields['genre_id'].widget.attrs.update({'class': 'form-select mb-3'})
         self.fields['song_year'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'YYYY'})
         self.fields['group_id'].widget.attrs.update({'class': 'form-select mb-3'})
-        self.fields['album_id'].widget.attrs.update({'class': 'form-select mb-4'})
+        self.fields['album_id'].widget.attrs.update({'class': 'form-select mb-3'})
+        self.fields['notes'].widget.attrs.update({'class': 'form-select mb-4'})
+        self.fields['notes'].help_text = f'{keywords}'
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        notes = cleaned_data.get('notes')
+
+        if not notes:
+            self.cleaned_data['notes'] = None
+
+        return cleaned_data
 
 
 class EditSongLinkForm(forms.ModelForm):
@@ -42,10 +84,11 @@ class EditSongLinkForm(forms.ModelForm):
 
     class Meta:
         model = SongLink
-        fields = ('youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wiki_curid', 'rateyourmusic_link')
+        fields = ('file_path', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wiki_curid', 'rateyourmusic_link')
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['file_path'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'D:\Music...'})
         self.fields['youtube_video_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://www.youtube.com/watch?v=...'})
         self.fields['youtube_audio_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://www.youtube.com/watch?v=...'})
         self.fields['spotify_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://open.spotify.com/track/...'})
@@ -57,12 +100,15 @@ class EditSongLinkForm(forms.ModelForm):
         
     def clean(self):
         cleaned_data = super().clean()
+        file_path = cleaned_data.get('file_path')
         youtube_video_link = cleaned_data.get('youtube_video_link')
         youtube_audio_link = cleaned_data.get('youtube_audio_link')
         spotify_link = cleaned_data.get('spotify_link')
         wiki_curid = cleaned_data.get("wiki_curid")
         rateyourmusic_link = cleaned_data.get('rateyourmusic_link')
 
+        if not file_path:
+            self.cleaned_data['file_path'] = None
         if not youtube_video_link:
             self.cleaned_data['youtube_video_link'] = None
         if not youtube_audio_link:

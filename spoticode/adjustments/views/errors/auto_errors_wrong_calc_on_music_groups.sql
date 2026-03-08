@@ -1,3 +1,5 @@
+-- public.auto_errors_wrong_calc_on_music_groups source
+
 CREATE OR REPLACE VIEW public.auto_errors_wrong_calc_on_music_groups
 AS WITH real_values AS (
          SELECT mg_1.group_name,

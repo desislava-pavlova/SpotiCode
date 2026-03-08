@@ -62,3 +62,4 @@ AS $function$
 	RETURN COALESCE(NEW, OLD);
 END;
 $function$
+;

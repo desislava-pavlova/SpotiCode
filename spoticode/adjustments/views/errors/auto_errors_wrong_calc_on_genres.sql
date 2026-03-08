@@ -1,3 +1,5 @@
+-- public.auto_errors_wrong_calc_on_genres source
+
 CREATE OR REPLACE VIEW public.auto_errors_wrong_calc_on_genres
 AS WITH real_values AS (
          SELECT sub_g.genre_name,

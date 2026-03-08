@@ -1,3 +1,5 @@
+-- public.missing_data_from_artists source
+
 CREATE OR REPLACE VIEW public.missing_data_from_artists
 AS SELECT id,
     artist_name,

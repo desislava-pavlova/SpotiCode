@@ -1,3 +1,5 @@
+-- public.errors_wrong_feat_artist source
+
 CREATE OR REPLACE VIEW public.errors_wrong_feat_artist
 AS SELECT songs.id AS song_id,
     songs.song_title,

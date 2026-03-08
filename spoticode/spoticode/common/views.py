@@ -10,7 +10,9 @@ from spoticode.web.access_validators import custom_login_required, can_create_or
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker
 
 
-# Music Groups
+
+# ---------- Music Group Views ---------- #
+# -- Show All
 @custom_login_required
 @database_required
 @can_read
@@ -38,6 +40,7 @@ def show_all_music_groups(request):
     return render(request, 'common/music_groups/music-groups-all.html', context)
 
 
+# -- Show Details
 @custom_login_required
 @database_required
 @can_read
@@ -64,6 +67,7 @@ def show_details_music_group(request, id):
     return render(request, 'common/music_groups/music-group-details.html', context)
 
 
+# -- Create New
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -82,6 +86,7 @@ def create_music_group(request):
     return render(request, 'common/music_groups/music-group-create.html', context)
 
 
+# -- Edit Info
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -102,6 +107,7 @@ def edit_music_group(request, id):
     return render(request, 'common/music_groups/music-group-edit.html', context)
 
 
+# -- Delete
 @custom_login_required
 @database_required
 @is_staff
@@ -121,7 +127,8 @@ def delete_music_group(request, id):
 
 
 
-# Genres
+# ---------- Genre Views ---------- #
+# -- Show All
 @custom_login_required
 @database_required
 @can_read
@@ -149,6 +156,7 @@ def show_all_genres(request):
     return render(request, 'common/genres/genres-all.html', context)
 
 
+# -- Show Details
 @custom_login_required
 @database_required
 @can_read
@@ -175,6 +183,7 @@ def show_details_genre(request, id):
     return render(request, 'common/genres/genre-details.html', context)
 
 
+# -- Create New
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -193,6 +202,7 @@ def create_genre(request):
     return render(request, 'common/genres/genre-create.html', context)
 
 
+# -- Edit Info
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -213,6 +223,7 @@ def edit_genre(request, id):
     return render(request, 'common/genres/genre-edit.html', context)
 
 
+# -- Delete
 @custom_login_required
 @database_required
 @is_staff

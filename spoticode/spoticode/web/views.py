@@ -4,6 +4,7 @@ from datetime import datetime
 from django.shortcuts import render
 
 
+# ---------- Default Views ---------- #
 def show_homepage(request):
     context = {
         'curr_year': datetime.now().year,
@@ -20,7 +21,7 @@ def show_about_page(request):
     return render(request, 'web/about.html', context)
 
 
-def show_unauthorized_page(request):
+def show_unauthorized_page(request):    
     context = {
         'curr_year': datetime.now().year,
     }
@@ -28,6 +29,8 @@ def show_unauthorized_page(request):
     return render(request, 'web/unauthorized-access.html', context)
 
 
+
+# ---------- Error URL Views ---------- #
 def custom_404_view(request, exception):
     context = {
         'curr_year': datetime.now().year,

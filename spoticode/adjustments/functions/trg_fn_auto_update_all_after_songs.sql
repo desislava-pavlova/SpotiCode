@@ -1,3 +1,5 @@
+-- DROP FUNCTION public.trg_fn_auto_update_all_after_songs();
+
 CREATE OR REPLACE FUNCTION public.trg_fn_auto_update_all_after_songs()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -216,3 +218,4 @@ AS $function$
 	RETURN COALESCE(NEW, OLD);
 END;
 $function$
+;

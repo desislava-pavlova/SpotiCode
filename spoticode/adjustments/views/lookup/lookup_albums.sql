@@ -1,3 +1,5 @@
+-- public.lookup_albums source
+
 CREATE OR REPLACE VIEW public.lookup_albums
 AS SELECT albums.id,
     albums.release_date,

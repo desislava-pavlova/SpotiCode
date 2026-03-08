@@ -11,7 +11,9 @@ from spoticode.web.access_validators import custom_login_required, can_create_or
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
-# Tasks
+
+# ---------- Task Views ---------- #
+# -- Show All
 @custom_login_required
 @database_required
 @can_read
@@ -67,12 +69,13 @@ def show_all_tasks(request):
     return render(request, 'tasks/tasks-all.html', context)
 
 
+# -- Show Details
 @custom_login_required
 @database_required
 @can_read
 def show_details_task(request, id):
     task = get_object_or_404(Task, id=id)
-    task_comments = TaskComment.objects.filter(task_id=id).order_by('-date_created')
+    task_comments = TaskComment.objects.filter(task_id=id).order_by('date_created')
     
     task_fields = []
     for field_name in task.__class__.field_order():
@@ -96,6 +99,7 @@ def show_details_task(request, id):
     return render(request, 'tasks/task-details.html', context)
 
 
+# -- Create New
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -114,6 +118,7 @@ def create_task(request):
     return render(request, 'tasks/task-create.html', context)
 
 
+# -- Edit Info
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -134,6 +139,7 @@ def edit_task(request, id):
     return render(request, 'tasks/task-edit.html', context)
 
 
+# -- Delete
 @custom_login_required
 @database_required
 @can_delete
@@ -152,8 +158,21 @@ def delete_task(request, id):
     return render(request, 'tasks/task-delete.html', context)
 
 
+# -- Complete Task
+@custom_login_required
+@database_required
+@can_create_or_update
+def complete_task(request, id):
+    task = get_object_or_404(Task, id=id)
 
-# Task Comments
+    task.status = "Completed"
+    task.save()
+    return redirect('task_details', id=task.id)
+
+
+
+# ---------- Task Comment Views ---------- #
+# -- Show Details
 @custom_login_required
 @database_required
 @can_read
@@ -182,6 +201,7 @@ def show_details_task_comment(request, id, c_id):
     return render(request, 'tasks/comments/task-comment-details.html', context)
 
 
+# -- Create New
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -205,6 +225,7 @@ def create_task_comment(request, id):
     return render(request, 'tasks/comments/task-comment-create.html', context)
 
 
+# -- Edit Comment
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -227,6 +248,7 @@ def edit_task_comment(request, id, c_id):
     return render(request, 'tasks/comments/task-comment-edit.html', context)
 
 
+# -- Delete
 @custom_login_required
 @database_required
 @can_delete

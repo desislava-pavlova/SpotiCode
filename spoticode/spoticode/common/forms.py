@@ -7,21 +7,23 @@ from spoticode.common.models import MusicGroup, Genre
 class CreateMusicGroupForm(forms.ModelForm):
     class Meta:
         model = MusicGroup
-        fields = ('group_name', )
+        fields = ('group_name', 'description')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['group_name'].widget.attrs.update({'class': 'form-control mb-4'})
+        self.fields['group_name'].widget.attrs.update({'class': 'form-control mb-3'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control mb-4'})
 
 
 class EditMusicGroupForm(forms.ModelForm):
     class Meta:
         model = MusicGroup
-        fields = ('group_name', )
+        fields = ('group_name', 'description')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['group_name'].widget.attrs.update({'class': 'form-control mb-4'})
+        self.fields['group_name'].widget.attrs.update({'class': 'form-control mb-3'})
+        self.fields['description'].widget.attrs.update({'class': 'form-control mb-4'})
 
 
 

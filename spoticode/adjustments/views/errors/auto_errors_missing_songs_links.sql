@@ -1,3 +1,5 @@
+-- public.auto_errors_missing_songs_links source
+
 CREATE OR REPLACE VIEW public.auto_errors_missing_songs_links
 AS SELECT songs.id AS song_id,
     songs.song_title,

@@ -10,7 +10,9 @@ from spoticode.web.access_validators import custom_login_required, can_create_or
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
-# Albums
+
+# ---------- Album Views ---------- #
+# -- Show All
 @custom_login_required
 @database_required
 @can_read
@@ -40,6 +42,7 @@ def show_all_albums(request):
     return render(request, 'albums/albums-all.html', context)
 
 
+# -- Show Details
 @custom_login_required
 @database_required
 @can_read
@@ -74,10 +77,11 @@ def show_details_album(request, id):
         'can_edit_check': can_edit_checker(request.user),
         'can_delete_check': can_delete_checker(request.user),
     }
-    
+
     return render(request, 'albums/album-details.html', context)
 
 
+# -- Create New
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -96,6 +100,7 @@ def create_album(request):
     return render(request, 'albums/album-create.html', context)
 
 
+# -- Edit Info
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -116,6 +121,7 @@ def edit_album_info(request, id):
     return render(request, 'albums/album-info-edit.html', context)
 
 
+# -- Edit Links
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -151,6 +157,8 @@ def edit_album_links(request, id):
     return render(request, 'albums/album-links-edit.html', context)
 
 
+
+# -- Delete
 @custom_login_required
 @database_required
 @can_delete

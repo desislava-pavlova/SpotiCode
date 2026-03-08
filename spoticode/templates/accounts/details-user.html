@@ -5,11 +5,13 @@
 {% block main_content %}
 
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
+    <div class="row vh-auto min-vh-100 bg-secondary rounded align-items-top justify-content-center mx-0 min-vh-100">
 
         <div class="col-sm-12 col-xl-6">
-            <div class="bg-secondary rounded h-100 p-4">
-                <h4 class="text-center mb-4" style="margin-top: 20px;">Profile Details</h4>
+            <div class="bg-secondary rounded h-20 p-4">
+            </div>
+            <div class="bg-secondary rounded h-auto p-4">
+                <h3 class="text-center text-white-50 mb-4" style="margin-top: 20px;">Profile Details</h3>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item bg-transparent">Name: {{ user.first_name }} {{ user.last_name }}</li>
                     <li class="list-group-item bg-transparent">Username: {{ user.username }} </li>

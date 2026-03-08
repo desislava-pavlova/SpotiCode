@@ -1,3 +1,5 @@
+-- public.lookup_playlists source
+
 CREATE OR REPLACE VIEW public.lookup_playlists
 AS SELECT id,
     playlist_name,

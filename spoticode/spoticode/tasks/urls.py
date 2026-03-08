@@ -11,6 +11,7 @@ urlpatterns = [
         path('details/', views.show_details_task, name='task_details'),
         path('delete/', views.delete_task, name='task_delete'),
         path('edit/', views.edit_task, name='task_edit'),
+        path('complete/', views.complete_task, name='task_complete'),
         
         path('comment/', include([
             path('create/', views.create_task_comment, name='task_comment_create'),

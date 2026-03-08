@@ -10,6 +10,13 @@ BEGIN
     WHERE group_name = 'Unspecified'
     LIMIT 1;
 
+    -- If not found, insert it
+    IF result IS NULL THEN
+        INSERT INTO music_groups (group_name)
+        VALUES ('Unspecified')
+        RETURNING id INTO result;
+    END IF;
+
     RETURN result;
 END;
 $function$

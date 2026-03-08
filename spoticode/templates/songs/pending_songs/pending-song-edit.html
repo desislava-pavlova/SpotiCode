@@ -5,11 +5,11 @@
 {% block main_content %}
 
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-1000 bg-secondary rounded align-items-top justify-content-center mx-0">
+    <div class="row vh-auto min-vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
 
         <div class="col-sm-12 col-xl-6">
             <div class="bg-secondary rounded h-100 p-4">
-                <h4 class="mb-4 text-center">Edit Pending Song</h4>
+                <h3 class="text-center text-light">Edit Pending Song</h3>
 
                 <div class="form-floating mb-3">
                     <form action="{% url 'pending_song_edit' id=pending_song.id %}" method="post">

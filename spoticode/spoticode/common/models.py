@@ -11,6 +11,8 @@ class MusicGroup(models.Model):
                           db_column='id', verbose_name='ID')
     group_name = models.CharField(max_length=GROUP_NAME_MAX_LENGTH, unique=True, 
                                   db_column='group_name', verbose_name='Group Name')
+    description = models.TextField(null=True, blank=True,
+                                   db_column='description', verbose_name='Description')
     songs_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
                                       db_column='songs_count', verbose_name='Total Songs')
     pending_count = models.IntegerField(blank=True, default=COUNTER_DEFAULT, 
@@ -27,7 +29,7 @@ class MusicGroup(models.Model):
     
     @classmethod
     def field_order(cls):
-        return ['songs_count', 'pending_count', 'id']
+        return ['description', 'songs_count', 'pending_count', 'id']
 
     class Meta:
         db_table = 'music_groups'

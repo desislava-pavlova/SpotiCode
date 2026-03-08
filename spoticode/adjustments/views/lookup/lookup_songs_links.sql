@@ -1,7 +1,10 @@
+-- public.lookup_songs_links source
+
 CREATE OR REPLACE VIEW public.lookup_songs_links
 AS SELECT songs_links.id,
     songs.song_title,
     artists.artist_name,
+    songs_links.file_path,
     songs_links.spotify_link,
     songs_links.wikipedia_link,
     songs_links.rateyourmusic_link

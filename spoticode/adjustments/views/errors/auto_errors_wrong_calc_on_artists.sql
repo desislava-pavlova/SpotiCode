@@ -1,3 +1,5 @@
+-- public.auto_errors_wrong_calc_on_artists source
+
 CREATE OR REPLACE VIEW public.auto_errors_wrong_calc_on_artists
 AS WITH real_values AS (
          SELECT sub_art.artist_name AS sub_artist,

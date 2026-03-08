@@ -5,13 +5,14 @@
 {% block main_content %}
 
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-1000 bg-secondary rounded align-items-top justify-content-center mx-0">
+    <div class="row vh-auto min-vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
 
         <!-- Tasks -->
         <div class="col-sm-6">
             <div class="bg-secondary rounded p-4">
-                <h4 class="text-center mb-4">Task Details</h4>
-                <h4 class="text-center mb-4"><u><b>{{ task }}</b></u></h4>
+                <h4 class="text-center text-light mb-4">Task Details</h4>
+                <h4 class="text-center text-white-50 mb-4"><u><b>{{ task }}</b></u></h4>
+                
                 <ul class="list-group list-group-flush">
                     {% for field in task_fields %}
                         {% if field.value or field.value == 0 %}
@@ -33,7 +34,7 @@
                 </ul>
 
                 <div class="bg-secondary rounded p-4">
-                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
+                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
                         {% if can_edit_check %}
                             <a href="{% url 'task_edit' id=task.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit</a>
                         {% endif %}
@@ -42,7 +43,10 @@
                         {% endif %}
                     </div>
 
-                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
+                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
+                        <a href="{% url 'task_complete' id=task.id %}" type="button" class="btn btn-danger m-2"><i class="fa fa-check me-2"></i>Complete</a>
+                    </div>
+                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
                         <a href="{% url 'tasks_all'%}" type="button" class="btn btn-outline-light m-2">Back</a>
                     </div>
                 </div>
@@ -54,18 +58,18 @@
         <div class="col-sm-6">
             <div class="h-100 bg-secondary rounded p-4">
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <h4 class="mb-0">Comments</h4>
+                    <h4 class="text-light mb-0">Comments</h4>
                     {% if not task_comments %}
-                        <h5 class="text-center">No Comments</h5>
+                        <h5 class="text-center text-light">No Comments</h5>
                     {% else %}
-                        <h5 class="text-center">Total Comments: {{ task_comments.count }}</h5>
+                        <h5 class="text-center text-light">Total Comments: {{ task_comments.count }}</h5>
                 </div>
                 
                     {% for comment in task_comments %}
                         <div class="d-flex align-items-center border-bottom py-3">
                             <div class="w-100 ms-3">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-0">{{ comment.user.username }}</h6>
+                                    <h6 class="text-white-50 mb-0">{{ comment.user.username }}</h6>
                                     <small>{{ comment.date_created|date:"F j, Y" }}</small>
                                 </div>
                                 <div class="d-flex w-100 justify-content-between">
@@ -79,7 +83,7 @@
                 {% endif %}
 
                 <div class="bg-secondary rounded p-4">
-                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
+                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
                         {% if can_create_check %}
                             <a href="{% url 'task_comment_create' id=task.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-plus me-2"></i>Add Comment</a>
                         {% endif %}

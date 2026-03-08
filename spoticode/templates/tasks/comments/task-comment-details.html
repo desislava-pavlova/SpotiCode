@@ -5,45 +5,55 @@
 {% block main_content %}
 
 <div class="container-fluid pt-4 px-4">
-    <div class="row vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
+    <div class="row vh-auto min-vh-100 bg-secondary rounded align-items-top justify-content-center mx-0">
 
-        <div class="col-sm-12 col-xl-6">
-            <div class="bg-secondary rounded h-100 p-4">
-                <h4 class="text-center mb-4">Comment Details for Task:</h4>
-                <h4 class="text-center mb-4"><u><b>{{ task }}</b></u></h4>
-                <ul class="list-group list-group-flush">
-                    {% for field in comment_fields %}
-                        {% if field.value or field.value == 0 %}
-                            {% if field.type == "DateField" or field.type == "DateTimeField" %}
-                                <li class="list-group-item bg-transparent">{{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}</li>
-                            {% elif field.type == "URLField" %}
-                                <a href="{{ field.value }}" target="_blank" rel="noopener noreferrer" class="list-group-item bg-transparent">{{ field.verbose_name }}: Yes</a>
-                            {% else %}
-                                <li class="list-group-item bg-transparent">{{ field.verbose_name }}: {{ field.value}}</li>
-                            {% endif %}
+        <!-- Genres -->
+        <div class="bg-secondary rounded p-4">
+            <h3 class="text-center text-light m-4 mb-3">Comment Details for Task:</h3>
+            <h3 class="text-center text-white-50 mb-4"><u><b>{{ task }}</b></u></h3>
+        </div>
+
+        <div class="col-xl-6 align-items-top">
+            <ul class="d-flex list-group list-group-flush">
+                {% for field in comment_fields %}
+                    {% if field.value or field.value == 0 %}
+                        {% if field.type == "DateField" or field.type == "DateTimeField" %}
+                            <li class="list-group-item bg-transparent">{{ field.verbose_name }}: {{ field.value|date:"F j, Y"}}</li>
+                        {% elif field.type == "URLField" %}
+                            <a href="{{ field.value }}" target="_blank" rel="noopener noreferrer" class="list-group-item bg-transparent">{{ field.verbose_name }}: Yes</a>
                         {% else %}
-                            {% if field.type == "URLField" %}
-                            <li class="list-group-item bg-transparent">{{ field.verbose_name }}: No</li>
-                            {% else %}
-                                <li class="list-group-item bg-transparent">{{ field.verbose_name }}:</li>
-                            {% endif %}
+                            <li class="list-group-item bg-transparent">{{ field.verbose_name }}: {{ field.value}}</li>
                         {% endif %}
-                    {% endfor %}
-                </ul>
+                    {% else %}
+                        {% if field.type == "URLField" %}
+                        <li class="list-group-item bg-transparent">{{ field.verbose_name }}: No</li>
+                        {% else %}
+                            <li class="list-group-item bg-transparent">{{ field.verbose_name }}:</li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
 
-                <div class="bg-secondary rounded p-4">
-                    <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 20px;">
-                        {% if can_edit_check %}
-                            <a href="{% url 'task_comment_edit' id=task.id c_id=task_comment.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit Info</a>
-                        {% endif %}
-                        {% if can_delete_check %}
-                            <a href="{% url 'task_comment_delete' id=task.id c_id=task_comment.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
-                        {% endif %}
-                    </div>
+        <div class="d-flex bg-secondary rounded p-4">
+            <div class="col-sm-3 p-3"></div>
+            <div class="col-sm-6 p-3">
+                <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
+                    {% if can_edit_check %}
+                        <a href="{% url 'task_comment_edit' id=task.id c_id=task_comment.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-pen me-2"></i>Edit Info</a>
+                    {% endif %}
+                    {% if can_delete_check %}
+                        <a href="{% url 'task_comment_delete' id=task.id c_id=task_comment.id %}" type="button" class="btn btn-outline-primary m-2"><i class="fa fa-eraser me-2"></i>Delete</a>
+                    {% endif %}
+                </div>
 
-                    <a href="{% url 'task_details' id=task.id %}" type="button" class="btn btn-outline-light py-3 w-100 mb-3">Back to Task</a>
+                <div class="btn-group d-flex justify-content-center" role="group" style="margin-top: 5px;">
+                    <a href="{% url 'task_details' id=task.id %}" type="button" class="btn btn-outline-light m-2">Back to Task</a>
                 </div>
             </div>
+
+            <div class="col-sm-3 p-3"></div>
+            
         </div>
     </div>
 </div>

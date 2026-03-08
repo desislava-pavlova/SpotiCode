@@ -14,7 +14,15 @@ class CreatePlaylistForm(forms.ModelForm):
         self.fields['playlist_link'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'https://open.spotify.com/playlist/...',})
         self.fields['playlist_image'].widget.attrs.update({'class': 'form-control bg-dark mb-3'})
         self.fields['notes'].widget.attrs.update({'class': 'form-control mb-4'})
-        # self.fields['playlist_name'].help_text = ''
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        notes = cleaned_data.get('notes')
+
+        if not notes:
+            self.cleaned_data['notes'] = None
+
+        return cleaned_data
 
 
 class EditPlaylistForm(forms.ModelForm):
@@ -44,3 +52,12 @@ class SongsSearchForm(forms.Form):
         self.fields['to_year'].widget.attrs.update({'class': 'form-control bg-dark mb-3'})
         self.fields['genre'].widget.attrs.update({'class': 'form-control mb-3'})
         self.fields['group'].widget.attrs.update({'class': 'form-control mb-4'})
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        notes = cleaned_data.get('notes')
+
+        if not notes:
+            self.cleaned_data['notes'] = None
+
+        return cleaned_data

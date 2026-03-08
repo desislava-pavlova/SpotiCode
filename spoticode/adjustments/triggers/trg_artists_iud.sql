@@ -5,4 +5,4 @@ DELETE
     OR
 UPDATE
     ON
-    public.artists FOR EACH ROW EXECUTE FUNCTION trg_fn_auto_update_all_after_artists();
+    public.artists FOR EACH ROW EXECUTE FUNCTION trg_fn_auto_update_all_after_artists()

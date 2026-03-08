@@ -28,6 +28,15 @@ class Playlist(models.Model):
     def field_order(cls):
         return ['songs_count', 'spotify_count', 'notes', 'id', 'playlist_link']
     
+    def save(self, *args, **kwargs):
+        if not self.notes:
+            self.notes = None
+        
+        if not self.playlist_link:
+            self.playlist_link = None
+        
+        super().save(*args, **kwargs)
+    
     class Meta:
         db_table = 'playlists'
         ordering = ('playlist_name',)
@@ -49,5 +58,15 @@ class SongPlaylistRelation(models.Model):
     class Meta:
         db_table = 'song_playlist_relations'
         unique_together = (('playlist_id', 'song_id'),)
+        ordering = ('playlist_id', 'song_id')
         verbose_name = 'Song-Playlist Relation'
         verbose_name_plural = 'Song-Playlist Relations'
+
+
+
+# Missing data models
+class MissingDataPlaylist(Playlist):
+    class Meta:
+        proxy = True
+        verbose_name = "Z_Missing Data: Playlists"
+        verbose_name_plural = "Z_Missing Data: Playlists"

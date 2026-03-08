@@ -4,12 +4,15 @@ from django.apps import apps
 from django.contrib.auth.models import User
 
 
-def get_app_choices():
-    """
-    Dynamically generate choices for app names.
-    """
-    app_configs = apps.get_app_configs()
-    return [(app_config.label, app_config.verbose_name) for app_config in app_configs]
+def get_app_choices():    
+    app_choices = [("all", "All Apps")]
+    
+    for app_config in apps.get_app_configs():
+            if app_config.name.__contains__('dropdown'):
+                continue 
+            app_choices.append((app_config.label, app_config.verbose_name))
+            
+    return app_choices
 
 
 def get_deleted_user():

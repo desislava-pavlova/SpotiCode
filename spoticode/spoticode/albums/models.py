@@ -64,7 +64,9 @@ class AlbumLink(models.Model):
                                    db_column='spotify_link', verbose_name='Spotify Link')
     wikipedia_link = models.URLField(null=True, blank=True, 
                                      db_column='wikipedia_link', verbose_name='Wikipedia Link')
-    rateyourmusic_link = models.URLField(null=True, blank=True, unique=True, 
+    discogs_link = models.URLField(null=True, blank=True, unique=True, 
+                                         db_column='discogs_link', verbose_name='Discogs Link')
+    rateyourmusic_link = models.URLField(null=True, blank=True, 
                                          db_column='rateyourmusic_link', verbose_name='Rate Your Music Link')
     
     def __str__(self):
@@ -72,7 +74,7 @@ class AlbumLink(models.Model):
     
     @classmethod
     def field_order(cls):
-        return ['spotify_link', 'wikipedia_link', 'rateyourmusic_link']
+        return ['spotify_link', 'wikipedia_link', 'discogs_link', 'rateyourmusic_link']
     
     class Meta:
         db_table = 'albums_links'
@@ -81,6 +83,8 @@ class AlbumLink(models.Model):
         verbose_name_plural = 'Albums Links'
 
 
+
+# Missing Data models
 class MissingDataAlbum(Album):
     class Meta:
         proxy = True

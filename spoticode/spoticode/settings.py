@@ -90,6 +90,14 @@ DATABASES = {
         'HOST': os.environ.get('DB_HOST_DEFAULT'),
         'PORT': os.environ.get('DB_PORT_DEFAULT'),
     },
+    'spoticode_database': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME_0'),
+        'USER': os.environ.get('DB_USER_0'),
+        'PASSWORD': os.environ.get('DB_PASSWORD_0'),
+        'HOST': os.environ.get('DB_HOST_0'),
+        'PORT': os.environ.get('DB_PORT_0'),
+    },
     'rock_database': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME_1'),
@@ -108,7 +116,7 @@ DATABASES = {
     },
 }
 
-ACTIVE_DATABASES = ('default', 'rock_database', 'balkan_database')
+ACTIVE_DATABASES = ('spoticode_database', 'rock_database', 'balkan_database')
 
 
 DATABASE_ROUTERS = ['spoticode.web.routers.UserDBRouter']

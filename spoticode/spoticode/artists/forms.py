@@ -34,13 +34,14 @@ class EditArtistLinkForm(forms.ModelForm):
 
     class Meta:
         model = ArtistLink
-        fields = ('official_website', 'spotify_link', 'wiki_curid', 'rateyourmusic_link')
+        fields = ('official_website', 'spotify_link', 'wiki_curid', 'discogs_link', 'rateyourmusic_link')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['official_website'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://...'})
         self.fields['spotify_link'].widget.attrs.update({'class': 'form-control mb-3','placeholder': 'https://open.spotify.com/artist/...'})
         self.fields['wiki_curid'].widget.attrs.update({'class': 'form-control mb-4','placeholder': '123...'})
+        self.fields['discogs_link'].widget.attrs.update({'class': 'form-control mb-3', 'placeholder': 'https://www.discogs.com/artist/...'})
         self.fields['rateyourmusic_link'].widget.attrs.update({'class': 'form-control mb-4','placeholder': 'https://rateyourmusic.com/artist/...'})
         
         if self.instance and self.instance.wikipedia_link:
@@ -50,7 +51,8 @@ class EditArtistLinkForm(forms.ModelForm):
         cleaned_data = super().clean()
         official_website = cleaned_data.get('official_website')
         spotify_link = cleaned_data.get('spotify_link')
-        wiki_curid = cleaned_data.get("wiki_curid")
+        wiki_curid = cleaned_data.get('wiki_curid')
+        discogs_link = cleaned_data.get('discogs_link')
         rateyourmusic_link = cleaned_data.get('rateyourmusic_link')
 
         if not official_website:
@@ -60,6 +62,8 @@ class EditArtistLinkForm(forms.ModelForm):
         if not wiki_curid:
             self.cleaned_data["wiki_curid"] = None
             self.cleaned_data['wikipedia_link'] = None
+        if not discogs_link:
+            self.cleaned_data['discogs_link'] = None
         if not rateyourmusic_link:
             self.cleaned_data['rateyourmusic_link'] = None
 

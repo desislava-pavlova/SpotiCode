@@ -1,3 +1,5 @@
+-- public.auto_errors_wrong_check_on_pending_song source
+
 CREATE OR REPLACE VIEW public.auto_errors_wrong_check_on_pending_song
 AS WITH real_new_artists AS (
          SELECT sub1_ps.id AS sub1_id,

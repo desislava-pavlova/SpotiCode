@@ -1,6 +1,8 @@
 @echo off
 setlocal
 
+set ERRORS=
+
 :ask_db
 set /p DB_NAME=Enter database name (required): 
 if "%DB_NAME%"=="" (
@@ -26,40 +28,57 @@ echo   DB_NAME=%DB_NAME%
 echo   DB_HOST=%DB_HOST%
 echo   DB_USER=%DB_USER%
 echo.
-
 pause
 
-REM === Apply initial records ===
-for /r base_data %%f in (*.sql) do (
-    echo Running %%f
-    psql -h %DB_HOST% -U %DB_USER% -d %DB_NAME% -f "%%f"
-)
 
-REM === Apply functions ===
+REM === FUNCTIONS ===
 for /r functions %%f in (*.sql) do (
     echo Running %%f
     psql -h %DB_HOST% -U %DB_USER% -d %DB_NAME% -f "%%f"
+
+    if errorlevel 1 (
+	echo ERROR in %%f
+	set ERRORS=!ERRORS!%%f\n
+    )
 )
 
-REM === Apply triggers ===
+
+REM === TRIGGERS ===
 for /r triggers %%f in (*.sql) do (
     echo Running %%f
     psql -h %DB_HOST% -U %DB_USER% -d %DB_NAME% -f "%%f"
+
+    if errorlevel 1 (
+	echo ERROR in %%f
+	set ERRORS=!ERRORS!%%f\n
+    )
 )
 
-REM === Apply constraints ===
-for /r constraints %%f in (*.sql) do (
-    echo Running %%f
-    psql -h %DB_HOST% -U %DB_USER% -d %DB_NAME% -f "%%f"
-)
 
-REM === Apply views ===
+REM === VIEWS ===
 for /r views %%f in (*.sql) do (
     echo Running %%f
     psql -h %DB_HOST% -U %DB_USER% -d %DB_NAME% -f "%%f"
+
+    if errorlevel 1 (
+	echo ERROR in %%f
+	set ERRORS=!ERRORS!%%f\n
+    )
 )
 
+
 echo.
-echo All SQL scripts applied successfully on %DB_NAME%.
+echo ==========================
+echo EXECUTION FINISHED
+echo ==========================
+
+if defined ERRORS (
+    echo The following scripts FAILED:
+    echo.
+    echo !ERRORS!
+) else ( 
+    echo All SQL scripts applied successfully on %DB_NAME%.
+)
+
 endlocal
 pause

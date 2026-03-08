@@ -3,16 +3,41 @@ from django.contrib import admin
 from django.db.models import Q
 # Project
 from spoticode.songs.models import Song, SongLink, PendingSong, MissingDataSong, MissingDataSongLink
-from spoticode.songs.admin_filters import SongsAlbumsNoAlbumsFilter, SongsLinksNoLinksFilter, MissingDataSongFilter, MissingDataSongLinkFilter
+from spoticode.songs.admin_filters import PendingSongAddedFilter, PendingSongNewArtistFilter
+from spoticode.songs.admin_filters import SongsAlbumsNoAlbumsFilter, SongsLinksNoLinksFilter
+from spoticode.songs.admin_filters import MissingDataSongFilter, MissingDataSongLinkFilter
 from spoticode.songs.admin_actions import make_added, copy_to_songs_table
 # Other
 from django_admin_listfilter_dropdown.filters import DropdownFilter
 
 
-# Original Tables
+# ----- Pending Songs Tables -----
+@admin.register(PendingSong)
+class PendingSongAdmin(admin.ModelAdmin):
+    list_display = ('song_title', 'main_artist', 'feat_artist', 'group', 'is_added', 'new_artist')
+    search_fields = ('song_title', 'main_artist', 'feat_artist')
+    list_filter = (
+        ('to_group__group_name', DropdownFilter),
+        (PendingSongAddedFilter),
+        (PendingSongNewArtistFilter),
+    )
+    
+    actions = (make_added, copy_to_songs_table)
+    
+    def group(self, obj):
+        return obj.to_group.group_name if obj.to_group else None
+    
+    def get_exclude(self, request, obj=None):
+        if obj is None:
+            return ['id', 'is_added', 'new_artist']
+        return []
+
+
+
+# ----- Original Song Tables -----
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album')
+    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album', 'notes')
     search_fields = ('song_title', 'main_artist__artist_name', 'feat_artist', 'album_id__album_name')
     list_filter = (
         ('main_artist__artist_name', DropdownFilter),
@@ -42,7 +67,7 @@ class SongAdmin(admin.ModelAdmin):
 
 @admin.register(SongLink)
 class SongLinkAdmin(admin.ModelAdmin):
-    list_display = ('song', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
+    list_display = ('song', 'file_path', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
     search_fields = ('for_song__song_title', 'for_song__main_artist__artist_name')
     list_filter = (
         ('for_song__main_artist__artist_name', DropdownFilter),
@@ -62,32 +87,11 @@ class SongLinkAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-@admin.register(PendingSong)
-class PendingSongAdmin(admin.ModelAdmin):
-    list_display = ('song_title', 'main_artist', 'feat_artist', 'group', 'is_added', 'new_artist')
-    search_fields = ('song_title', 'main_artist', 'feat_artist')
-    list_filter = (
-        ('to_group__group_name', DropdownFilter),
-        ('is_added'),
-        ('new_artist'),
-    )
-    
-    actions = (make_added, copy_to_songs_table)
-    
-    def group(self, obj):
-        return obj.to_group.group_name if obj.to_group else None
-    
-    def get_exclude(self, request, obj=None):
-        if obj is None:
-            return ['id', 'is_added', 'new_artist']
-        return []
 
-
-
-# Missing Data Tables
+# ----- Missing Data Song Tables -----
 @admin.register(MissingDataSong)
 class MissingDataSongAdmin(admin.ModelAdmin):
-    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album')
+    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album', 'notes')
     search_fields = ('song_title', 'main_artist__artist_name', 'feat_artist', 'album_id__album_name')
     list_filter = (
         ('main_artist__artist_name', DropdownFilter),
@@ -119,7 +123,7 @@ class MissingDataSongAdmin(admin.ModelAdmin):
 
 @admin.register(MissingDataSongLink)
 class MissingDataSongLinkAdmin(admin.ModelAdmin):
-    list_display = ('song', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
+    list_display = ('song', 'file_path', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link')
     search_fields = ('for_song__song_title', 'for_song__main_artist__artist_name')
     list_filter = (
         ('for_song__main_artist__artist_name', DropdownFilter),

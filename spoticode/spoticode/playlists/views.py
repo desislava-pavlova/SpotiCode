@@ -11,12 +11,15 @@ from spotipy.oauth2 import SpotifyOAuth
 from spoticode.songs.models import Song
 from spoticode.playlists.models import Playlist, SongPlaylistRelation
 from spoticode.playlists.forms import CreatePlaylistForm, EditPlaylistForm, SongsSearchForm
-from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read
+from spoticode.web.access_validators import custom_login_required, can_create_or_update, can_delete, can_read, database_required
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
-# Playlists
+
+# ---------- Playlist Views ---------- #
+# -- Show All
 @custom_login_required
+@database_required
 @can_read
 def show_all_playlists(request):
     playlists = Playlist.objects.all()
@@ -41,7 +44,9 @@ def show_all_playlists(request):
     return render(request, 'playlists/playlists-all.html', context)
 
 
+# -- Show Details
 @custom_login_required
+@database_required
 @can_read
 def show_details_playlist(request, id):
     playlist = get_object_or_404(Playlist, id=id)
@@ -71,7 +76,9 @@ def show_details_playlist(request, id):
     return render(request, 'playlists/playlist-details.html', context)
 
 
+# -- Create New
 @custom_login_required
+@database_required
 @can_create_or_update
 def create_playlist(request):
     form = CreatePlaylistForm(request.POST or None, request.FILES)
@@ -82,6 +89,10 @@ def create_playlist(request):
         if playlist_link and '?si=' in playlist_link:
             playlist_link = playlist_link.split('?si=')[0]
             form.cleaned_data['playlist_link'] = playlist_link
+        
+        notes = form.cleaned_data['notes']
+        if notes == '':
+            form.cleaned_data['notes'] = None
         
         playlist = form.save()
         return redirect('playlist_details', id=playlist.id)
@@ -94,7 +105,9 @@ def create_playlist(request):
     return render(request, 'playlists/playlist-create.html', context)
 
 
+# -- Edit Info
 @custom_login_required
+@database_required
 @can_create_or_update
 def edit_playlist_info(request, id):
     playlist = get_object_or_404(Playlist, id=id)
@@ -107,6 +120,10 @@ def edit_playlist_info(request, id):
             if playlist_link and '?si=' in playlist_link:
                 playlist_link = playlist_link.split('?si=')[0]
                 playlist.playlist_link = playlist_link
+            
+            notes = form.cleaned_data['notes']
+            if notes == '':
+                form.cleaned_data['notes'] = None
             
             form.save()
             return redirect('playlist_details', id=playlist.id)
@@ -123,7 +140,9 @@ def edit_playlist_info(request, id):
     return render(request, 'playlists/playlist-info-edit.html', context)
 
 
+# -- Delete
 @custom_login_required
+@database_required
 @can_delete
 def delete_playlist(request, id):
     playlist = get_object_or_404(Playlist, id=id)
@@ -141,8 +160,10 @@ def delete_playlist(request, id):
 
 
 
-# Song-Playlist Relations
+# ---------- Song-Playlist Relation Views ---------- #
+# -- Show All Songs
 @custom_login_required
+@database_required
 @can_read
 def show_all_playlist_songs(request, id):
     playlist = get_object_or_404(Playlist, id=id)
@@ -173,7 +194,9 @@ def show_all_playlist_songs(request, id):
     return render(request, 'playlists/song_playlist_relations/playlist-songs-all.html', context)
 
 
+# -- Mass Add - Select
 @custom_login_required
+@database_required
 @can_create_or_update
 def select_songs_for_mass_add(request, id):
     playlist = get_object_or_404(Playlist, id=id)
@@ -195,9 +218,9 @@ def select_songs_for_mass_add(request, id):
         if to_year:
             songs = songs.filter(song_year__lte=to_year)
         if genre:
-            songs = songs.filter(genre__genre_name__icontains=genre)
+            songs = songs.filter(genre_id__genre_name__icontains=genre)
         if group:
-            songs = songs.filter(group__group_name__icontains=group)
+            songs = songs.filter(group_id__group_name__icontains=group)
       
     total_songs = songs.count()
     
@@ -213,41 +236,32 @@ def select_songs_for_mass_add(request, id):
     return render(request, 'playlists/song_playlist_relations/playlist-songs-preview-mass-add.html', context)
 
 
+# -- Mass Add
 @custom_login_required
+@database_required
 @can_create_or_update
-def mass_add_songs(request, id):
+def mass_add_songs(request, id, songs):
     if request.method == 'POST':
-        spotify_log = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get('CLIENT_ID'),
-                                                    client_secret=os.environ.get('CLIENT_SECRET'),
-                                                    redirect_uri="http://localhost:8000/",
-                                                    scope="playlist-modify-public"))
-        
-        selected_songs = request.POST.getlist('songs')
+        selected_songs = [get_object_or_404(Song, id=song.id) for song in songs]
         playlist = get_object_or_404(Playlist, id=id)
-        spotify_playlist = spotify_log.user_playlist_create(spotify_log.me()["id"], playlist.playlist_name, public=True)
-        playlist_id = spotify_playlist["id"]
-        playlist.playlist_link = spotify_playlist['external_urls']['spotify']
         
-        max_tracks = 100  # Maximum number of tracks allowed per request
-        matrix_selected_songs = [selected_songs[i:i+max_tracks] for i in range(0, len(selected_songs), max_tracks)]
-        
-        for curr_patch in matrix_selected_songs:
+        print(selected_songs)
             
-            for song in curr_patch:
-                # Add song to Spotify
-                track_id = song.spotify_link.split("/")[-1].split("?")[0]
-                spotify_log.playlist_add_items(playlist_id, track_id)
-                
-                # Add song to mapping table
-                if not SongPlaylistRelation.objects.filter(playlist_id=playlist, song_id=song).exists():
-                    SongPlaylistRelation.objects.create(playlist_id=playlist, song_id=song)
-            
-            time.sleep(2)
+        for song in selected_songs:
+            if not SongPlaylistRelation.objects.filter(playlist_id=playlist, song_id=song).exists():
+                SongPlaylistRelation.objects.create(playlist_id=playlist, song_id=song)
+    
+    # context = {
+    #     'curr_year': datetime.now().year,
+    #     'playlist': playlist,
+    # }
         
     return redirect('playlist_songs_all', id=playlist.id)
 
 
+# -- Delete
 @custom_login_required
+@database_required
 @can_delete
 def delete_song_from_playlist(request, id, s_id):
     playlist = get_object_or_404(Playlist, id=id)
@@ -257,3 +271,40 @@ def delete_song_from_playlist(request, id, s_id):
         song.delete()
     
     return redirect('playlist_songs_all', id=playlist.id)
+
+
+
+# ---------- Code for testing Spotify API ---------- #
+# @custom_login_required
+# @database_required
+# @can_create_or_update
+# def mass_add_songs(request, id):
+#     if request.method == 'POST':
+#         # spotify_log = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get('CLIENT_ID'),
+#         #                                             client_secret=os.environ.get('CLIENT_SECRET'),
+#         #                                             redirect_uri="http://localhost:8000/",
+#         #                                             scope="playlist-modify-public"))
+        
+#         selected_songs = request.POST.getlist('songs')
+#         playlist = get_object_or_404(Playlist, id=id)
+#         # spotify_playlist = spotify_log.user_playlist_create(spotify_log.me()["id"], playlist.playlist_name, public=True)
+#         # playlist_id = spotify_playlist["id"]
+#         # playlist.playlist_link = spotify_playlist['external_urls']['spotify']
+        
+#         max_tracks = 100  # Maximum number of tracks allowed per request
+#         matrix_selected_songs = [selected_songs[i:i+max_tracks] for i in range(0, len(selected_songs), max_tracks)]
+        
+#         for curr_patch in matrix_selected_songs:
+            
+#             for song in curr_patch:
+#                 # Add song to Spotify
+#                 # track_id = song.spotify_link.split("/")[-1].split("?")[0]
+#                 # spotify_log.playlist_add_items(playlist_id, track_id)
+                
+#                 # Add song to mapping table
+#                 if not SongPlaylistRelation.objects.filter(playlist_id=playlist, song_id=song).exists():
+#                     SongPlaylistRelation.objects.create(playlist_id=playlist, song_id=song)
+            
+#             time.sleep(2)
+        
+#     return redirect('playlist_songs_all', id=playlist.id)

@@ -5,4 +5,4 @@ DELETE
     OR
 UPDATE
     ON
-    public.song_playlist_relations FOR EACH ROW EXECUTE FUNCTION trg_fn_auto_update_all_after_sp_relations();
+    public.song_playlist_relations FOR EACH ROW EXECUTE FUNCTION trg_fn_auto_update_all_after_sp_relations()

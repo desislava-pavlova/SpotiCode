@@ -1,3 +1,5 @@
+-- public.lookup_artists_links source
+
 CREATE OR REPLACE VIEW public.lookup_artists_links
 AS SELECT artists_links.id,
     artists.artist_name,

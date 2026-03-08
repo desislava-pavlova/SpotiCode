@@ -1,3 +1,5 @@
+-- public.view_total_songs_by_first_letter_artist source
+
 CREATE OR REPLACE VIEW public.view_total_songs_by_first_letter_artist
 AS SELECT
         CASE

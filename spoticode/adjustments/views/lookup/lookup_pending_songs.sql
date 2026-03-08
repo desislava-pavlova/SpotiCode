@@ -1,3 +1,5 @@
+-- public.lookup_pending_songs source
+
 CREATE OR REPLACE VIEW public.lookup_pending_songs
 AS SELECT pending_songs.id,
     pending_songs.song_title,

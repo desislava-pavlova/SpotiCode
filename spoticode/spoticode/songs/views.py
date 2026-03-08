@@ -14,7 +14,9 @@ from spoticode.web.access_validators import custom_login_required, can_create_or
 from spoticode.web.access_checkers import can_create_checker, can_edit_checker, can_delete_checker
 
 
-# Songs
+
+# ---------- Song Views ---------- #
+# -- Show All
 @custom_login_required
 @database_required
 @can_read
@@ -45,6 +47,7 @@ def show_all_songs(request):
     return render(request, 'songs/songs-all.html', context)
 
 
+# -- Show Details
 @custom_login_required
 @database_required
 @can_read
@@ -96,13 +99,19 @@ def show_details_song(request, id):
     return render(request, 'songs/song-details.html', context)
 
 
+# -- Create New
 @custom_login_required
 @database_required
 @can_create_or_update
 def create_song(request):
     form = CreateSongForm(request.POST or None)
     
-    if request.method == 'POST' and form.is_valid():        
+    if request.method == 'POST' and form.is_valid():
+        
+        notes = form.cleaned_data['notes']
+        if notes == '':
+            form.cleaned_data['notes'] = None
+        
         song = form.save()
         return redirect('song_details', id=song.id)
     
@@ -114,7 +123,9 @@ def create_song(request):
     return render(request, 'songs/song-create.html', context)
 
 
+# -- Add to Playlist
 @custom_login_required
+@database_required
 @can_create_or_update
 def add_song_to_playlist(request, id):
     song = get_object_or_404(Song, id=id)
@@ -139,6 +150,7 @@ def add_song_to_playlist(request, id):
     return render(request, 'songs/song-add-to-playlist.html', context)
 
 
+# -- Edit Info
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -151,6 +163,11 @@ def edit_song_info(request, id):
     album_queryset = Album.objects.filter(Q(album_artist=artist) | Q(album_artist=various_artists)).order_by('album_artist__artist_name', 'album_name')
     
     if request.method == 'POST' and form.is_valid():
+        
+        notes = form.cleaned_data['notes']
+        if notes == '':
+            form.cleaned_data['notes'] = None
+        
         form.save()
         return redirect('song_details', id=song.id)
     
@@ -167,6 +184,7 @@ def edit_song_info(request, id):
     return render(request, 'songs/song-info-edit.html', context)
 
 
+# -- Edit Links
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -176,6 +194,11 @@ def edit_song_links(request, id):
     form = EditSongLinkForm(request.POST or None, instance=song_links)
     
     if request.method == 'POST' and form.is_valid():
+        
+        file_path = form.cleaned_data['file_path']
+        if file_path and file_path.startswith('"') and file_path.endswith('"'):
+            file_path = file_path[1:-1]
+            song_links.file_path = file_path
         
         spotify_link = form.cleaned_data['spotify_link']
         if spotify_link and '?si=' in spotify_link:
@@ -212,6 +235,7 @@ def edit_song_links(request, id):
     return render(request, 'songs/song-links-edit.html', context)
     
 
+# -- Delete
 @custom_login_required
 @database_required
 @can_delete
@@ -231,7 +255,8 @@ def delete_song(request, id):
 
 
 
-# Pending Songs
+# ---------- Pending Song Views ---------- #
+# -- Show All
 @custom_login_required
 @database_required
 @can_read
@@ -264,6 +289,7 @@ def show_all_pending_songs(request):
     return render(request, 'songs/pending_songs/pending-songs-all.html', context)
 
 
+# -- Show Details
 @custom_login_required
 @database_required
 @can_read
@@ -290,6 +316,7 @@ def show_details_pending_song(request, id):
     return render(request, 'songs/pending_songs/pending-song-details.html', context)
 
 
+# -- Create New
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -308,6 +335,7 @@ def create_pending_song(request):
     return render(request, 'songs/pending_songs/pending-song-create.html', context)
 
 
+# -- Edit Info
 @custom_login_required
 @database_required
 @can_create_or_update
@@ -328,6 +356,7 @@ def edit_pending_song(request, id):
     return render(request, 'songs/pending_songs/pending-song-edit.html', context)
 
 
+# -- Delete
 @custom_login_required
 @database_required
 @can_delete
@@ -346,6 +375,7 @@ def delete_pending_song(request, id):
     return render(request, 'songs/pending_songs/pending-song-delete.html', context)
 
 
+# -- Mass Delete
 @custom_login_required
 @database_required
 @is_staff

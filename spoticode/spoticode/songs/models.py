@@ -31,6 +31,8 @@ class Song(models.Model):
     group_id = models.ForeignKey(to='common.MusicGroup', to_field='id', on_delete=models.SET_DEFAULT, 
                               blank=True, default=MusicGroup.get_default_group, 
                               db_column='group_id', verbose_name='Group')
+    notes = models.TextField(null=True, blank=True, 
+                             db_column='notes', verbose_name='Notes')
 
     def __str__(self):
         if self.feat_artist is not None:
@@ -40,7 +42,13 @@ class Song(models.Model):
     
     @classmethod
     def field_order(cls):
-        return ['song_year', 'genre_id', 'album_id', 'group_id', 'id']
+        return ['song_year', 'genre_id', 'album_id', 'group_id', 'notes', 'id']
+    
+    def save(self, *args, **kwargs):
+        if not self.notes:
+            self.notes = None
+        
+        super().save(*args, **kwargs)
     
     class Meta:
         db_table = 'songs'
@@ -55,6 +63,8 @@ class SongLink(models.Model):
                           db_column='id', verbose_name='ID')
     for_song = models.OneToOneField(Song, to_field='id', on_delete=models.CASCADE, 
                               db_column='for_song', verbose_name='For Song')
+    file_path = models.CharField(null=True, blank=True, unique=True, 
+                                       db_column='file_path', verbose_name='File Path')
     youtube_video_link = models.URLField(null=True, blank=True, unique=True, 
                                        db_column='youtube_video_link', verbose_name='YouTube Video Link')
     youtube_audio_link = models.URLField(null=True, blank=True, unique=True, 
@@ -71,8 +81,8 @@ class SongLink(models.Model):
     
     @classmethod
     def field_order(cls):
-        return ['youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link']
-
+        return ['file_path', 'youtube_video_link', 'youtube_audio_link', 'spotify_link', 'wikipedia_link', 'rateyourmusic_link']
+    
     class Meta:
         db_table = 'songs_links'
         ordering = ('for_song__main_artist__artist_name', 'for_song__song_title')
@@ -113,6 +123,8 @@ class PendingSong(models.Model):
         verbose_name_plural = 'Pending Songs'
 
 
+
+# Missing data models
 class MissingDataSong(Song):
     class Meta:
         proxy = True

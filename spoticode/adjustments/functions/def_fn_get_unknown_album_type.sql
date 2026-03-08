@@ -10,6 +10,13 @@ BEGIN
     WHERE album_type = 'Unknown'
     LIMIT 1;
 
+    -- If not found, insert it
+    IF result IS NULL THEN
+        INSERT INTO album_types (album_type)
+        VALUES ('Unknown')
+        RETURNING id INTO result;
+    END IF;
+
     RETURN result;
 END;
 $function$
