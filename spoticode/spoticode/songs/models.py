@@ -33,6 +33,8 @@ class Song(models.Model):
                               db_column='group_id', verbose_name='Group')
     notes = models.TextField(null=True, blank=True, 
                              db_column='notes', verbose_name='Notes')
+    duration = models.DurationField(null=True, blank=True, 
+                                db_column='duration', verbose_name='Duration')
 
     def __str__(self):
         if self.feat_artist is not None:
@@ -42,7 +44,7 @@ class Song(models.Model):
     
     @classmethod
     def field_order(cls):
-        return ['song_year', 'genre_id', 'album_id', 'group_id', 'notes', 'id']
+        return ['song_year', 'duration', 'genre_id', 'album_id', 'group_id', 'notes', 'id']
     
     def save(self, *args, **kwargs):
         if not self.notes:

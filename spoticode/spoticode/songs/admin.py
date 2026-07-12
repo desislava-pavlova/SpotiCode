@@ -37,7 +37,7 @@ class PendingSongAdmin(admin.ModelAdmin):
 # ----- Original Song Tables -----
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album', 'notes')
+    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'duration', 'group', 'album', 'notes')
     search_fields = ('song_title', 'main_artist__artist_name', 'feat_artist', 'album_id__album_name')
     list_filter = (
         ('main_artist__artist_name', DropdownFilter),
@@ -91,7 +91,7 @@ class SongLinkAdmin(admin.ModelAdmin):
 # ----- Missing Data Song Tables -----
 @admin.register(MissingDataSong)
 class MissingDataSongAdmin(admin.ModelAdmin):
-    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year', 'group', 'album', 'notes')
+    list_display = ('song_title', 'artist', 'feat_artist', 'genre', 'song_year','duration', 'group', 'album', 'notes')
     search_fields = ('song_title', 'main_artist__artist_name', 'feat_artist', 'album_id__album_name')
     list_filter = (
         ('main_artist__artist_name', DropdownFilter),
@@ -113,7 +113,7 @@ class MissingDataSongAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(Q(song_year__isnull=True) | Q(genre_id__isnull=True) | Q(album_id__isnull=True))
+        return qs.filter(Q(song_year__isnull=True) | Q(genre_id__isnull=True) | Q(album_id__isnull=True) | Q(duration__isnull=True))
     
     def get_exclude(self, request, obj=None):
         if obj is None:

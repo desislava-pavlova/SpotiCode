@@ -116,6 +116,7 @@ class MissingDataSongFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         return (
             ('missing_song_year', _('Release Year')),
+            ('missing_duration', _('Duration')),
             ('missing_genre', _('Genre')),
             ('missing_album', _('Album')),
             ('missing_notes', _('Notes')),            
@@ -124,6 +125,8 @@ class MissingDataSongFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() == 'missing_song_year':
             return queryset.filter(song_year__isnull=True)
+        elif self.value() == 'missing_duration':
+            return queryset.filter(duration__isnull=True)
         elif self.value() == 'missing_genre':
             return queryset.filter(genre_id__isnull=True)
         elif self.value() == 'missing_album':
