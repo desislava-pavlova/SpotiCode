@@ -9,6 +9,7 @@ from django.contrib.auth.models import User, Group
 from spoticode.accounts.forms import RegisterUserForm, EditUserForm, PasswordChangeForm
 from spoticode.web.access_validators import custom_login_required, is_staff, is_user_self, database_required
 from spoticode.web.routers import set_current_db
+from spoticode.web.default_values import get_db_display_name
 
 
 
@@ -58,7 +59,6 @@ def choose_database(request):
                 available_dbs.append(db)
         except Exception:
             continue
-    available_dbs = sorted(available_dbs)
     
     if request.method == "POST":
         db_choice = request.POST.get("database")
@@ -67,6 +67,11 @@ def choose_database(request):
             set_current_db(db_choice)
             
             return redirect("homepage")
+
+    available_dbs = sorted(
+        ((db, get_db_display_name(db)) for db in available_dbs),
+        key=lambda pair: pair[1],
+    )
         
     context = {
         'curr_year': datetime.now().year,

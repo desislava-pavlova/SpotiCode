@@ -61,19 +61,19 @@
         <div class="pagination justify-content-center align-items-center mt-4">
             <ul class="pagination">
                 <li class="page-item">
-                    <a href="?page=1" class="btn btn-link m-2">&laquo;</a>
+                    <a href="?query={{ request.GET.query|urlencode }}&page=1" class="btn btn-link m-2">&laquo;</a>
                     {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-link m-2" >&lt;</a>
+                        <a href="?query={{ request.GET.query|urlencode }}&page={{ page_obj.previous_page_number }}" class="btn btn-link m-2" >&lt;</a>
                     {% else %}
-                        <a href="?page=1" class="btn btn-link m-2" >&lt;</a>
+                        <a href="?query={{ request.GET.query|urlencode }}&page=1" class="btn btn-link m-2" >&lt;</a>
                     {% endif %}
-                    <a href="?page={{ page_obj.number }}" class="btn btn-outline-primary m-2" >{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+                    <a href="?query={{ request.GET.query|urlencode }}&page={{ page_obj.number }}" class="btn btn-outline-primary m-2" >{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
                     {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-link m-2" >&gt;</a>
+                        <a href="?query={{ request.GET.query|urlencode }}&page={{ page_obj.next_page_number }}" class="btn btn-link m-2" >&gt;</a>
                     {% else %}
-                        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-link m-2" >&gt;</a>
+                        <a href="?query={{ request.GET.query|urlencode }}&page={{ page_obj.paginator.num_pages }}" class="btn btn-link m-2" >&gt;</a>
                     {% endif %}
-                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-link m-2">&raquo;</a>
+                    <a href="?query={{ request.GET.query|urlencode }}&page={{ page_obj.paginator.num_pages }}" class="btn btn-link m-2">&raquo;</a>
                 </li>
             </ul>
         </div>

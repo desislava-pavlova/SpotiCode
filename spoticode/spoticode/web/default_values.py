@@ -1,6 +1,7 @@
 import threading
 # Django
 from django.apps import apps
+from django.conf import settings
 from django.contrib.auth.models import User
 
 
@@ -13,6 +14,10 @@ def get_app_choices():
             app_choices.append((app_config.label, app_config.verbose_name))
             
     return app_choices
+
+
+def get_db_display_name(db_alias):
+    return settings.DATABASE_DISPLAY_NAMES.get(db_alias, db_alias)
 
 
 def get_deleted_user():

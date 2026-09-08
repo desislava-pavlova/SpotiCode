@@ -24,7 +24,7 @@ def get_all_keywords():
 class CreateSongForm(forms.ModelForm):
     class Meta:
         model = Song
-        exclude = ('song_id', )
+        exclude = ()
         
     def __init__(self, *args, **kwargs):
         keywords = ('; ').join(get_all_keywords())
@@ -54,7 +54,7 @@ class CreateSongForm(forms.ModelForm):
 class EditSongForm(forms.ModelForm):
     class Meta:
         model = Song
-        exclude = ('song_id', )
+        exclude = ()
         
     def __init__(self, *args, **kwargs):
         keywords = ('; ').join(get_all_keywords())

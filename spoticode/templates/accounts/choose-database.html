@@ -13,10 +13,10 @@
                     
                     <form method="post">
                         {% csrf_token %}
-                        {% for db in available_dbs %}
+                        {% for db, db_display in available_dbs %}
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item bg-transparent">
-                                    <button type="submit" name="database" value="{{ db }}" class="btn btn-outline-light py-3 w-100 mb-4">{{ db|title }}</button>
+                                    <button type="submit" name="database" value="{{ db }}" class="btn btn-outline-light py-3 w-100 mb-4">{{ db_display }}</button>
                                 </li>
                             </ul>
                         {% endfor %}

@@ -126,6 +126,13 @@ DATABASES = {
 
 ACTIVE_DATABASES = ('spoticode_database', 'rock_database', 'balkan_database', 'pop_database')
 
+DATABASE_DISPLAY_NAMES = {
+    'spoticode_database': 'SpotiCode',
+    'rock_database': 'Rock',
+    'balkan_database': 'Balkan',
+    'pop_database': 'Pop',
+}
+
 
 DATABASE_ROUTERS = ['spoticode.web.routers.UserDBRouter']
 
